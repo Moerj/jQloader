@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader v0.0.1
+ * jQloader v0.0.2
  * @license: MIT
  * Designed and built by Moer
  * github   ...
@@ -39,6 +39,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     position: 'fixed',
                     left: 0,
                     top: 0,
+                    zIndex: 9999,
                     boxShadow: '1px 1px 2px 0 ' + this.color
                 });
             }
@@ -120,26 +121,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
-        var $loaders = $('jq-include');
-
-        var _loop = function _loop(i) {
-            var $loader = $($loaders[i]);
+        var includeDoms = document.getElementsByTagName('jq-include');
+        for (var i = 0; i < includeDoms.length; i++) {
+            var $loader = $(includeDoms[i]);
             var url = $loader.attr('src');
-            var $container = $('<div></div>');
-            $loader.replaceWith($container);
-            $container.loadPage({
-                url: url,
-                history: false,
-                progress: false
-            }, function () {
-                // 编译并ajax加载完成后的回调
-                $container.children().eq(0).unwrap();
-                _loadHitory();
-            });
-        };
-
-        for (var i = 0; i < $loaders.length; i++) {
-            _loop(i);
+            if (url) {
+                (function () {
+                    var $container = $('<div></div>');
+                    $loader.replaceWith($container);
+                    $container.loadPage({
+                        url: url,
+                        history: false,
+                        progress: false,
+                        async: false
+                    }, function () {
+                        // 编译并ajax加载完成后的回调
+                        $container.children().eq(0).unwrap();
+                    });
+                })();
+            }
         }
     }
 

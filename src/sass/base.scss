@@ -1,0 +1,19 @@
+.banner{
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(left, #78baf2, #39eeb8);
+    color: #fff;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 50px;
+    transition: 1s;
+
+    h1{
+        font-size: 60px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.31);
+    }
+}
+
+.contanier{
+    padding: 10px;
+}

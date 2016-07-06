@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.1
+ * jQloader v0.0.2
  * @license: MIT
  * Designed and built by Moer
  * github   ...
@@ -27,6 +27,7 @@
                 position: 'fixed',
                 left: 0,
                 top: 0,
+                zIndex: 9999,
                 boxShadow: '1px 1px 2px 0 ' + this.color
             });
         }
@@ -90,22 +91,23 @@
 
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
-        let $loaders = $('jq-include');
-
-        for (let i = 0; i < $loaders.length; i++) {
-            let $loader = $($loaders[i]);
-            let url = $loader.attr('src')
-            let $container = $('<div></div>')
-            $loader.replaceWith($container);
-            $container.loadPage({
-                url: url,
-                history: false,
-                progress: false
-            }, () => {
-                // 编译并ajax加载完成后的回调
-                $container.children().eq(0).unwrap();
-                _loadHitory();
-            })
+        let includeDoms = document.getElementsByTagName('jq-include');
+        for (let i = 0; i < includeDoms.length; i++) {
+            let $loader = $(includeDoms[i]);
+            let url = $loader.attr('src');
+            if (url) {
+                let $container = $('<div></div>');
+                $loader.replaceWith($container);
+                $container.loadPage({
+                    url: url,
+                    history: false,
+                    progress: false,
+                    async: false
+                }, () => {
+                    // 编译并ajax加载完成后的回调
+                    $container.children().eq(0).unwrap();
+                })
+            }
         }
 
     }
