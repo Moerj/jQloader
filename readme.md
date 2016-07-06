@@ -1,47 +1,22 @@
-# 微信前端框架 v0.1.0
+# jQloader v0.0.3
 
-https://github.com/Moerj/WeUI
+https://github.com/Moerj/jQloader
   
   
-## 依赖
-导入 jQuery 或者 Zepto  
-WebUploader 和 lazyload 对 jQeruy 有强依赖，因此若使用它们则需要选 jQeruy
-  
-## 集成
-- [WeUI 微信UI](https://github.com/weui/weui/wiki)
-- [jquery-weui 微信UI的封装组件库](http://lihongxun945.github.io/jquery-weui)
+## 功能
+- 指令模板，html 页面直接引入其他页面
+- 动态加载，ajax 动态加载html页面
+- 历史记录，ajax 加载的页面会存入浏览器历史记录
+- 路由机制，由一个路由容器负责显示路由地址
+- 加载进度条，基础自动的进度条效果
 
-## 可选组件
-- [swiper 幻灯片组件](http://www.swiper.com.cn/)
-- [WebUploader 上传组件](http://fex.baidu.com/webuploader)
-- [jquery-lazyload 图片懒加载](http://www.appelsiini.net/projects/lazyload)
-- 其他组件会在这里更新地址
   
   
-## 安装
-克隆项目后，进入项目根目录运行
-```javascript
-npm install
-```
-  
-## 工程目录
-用于存放开发时的代码
-```javascript
-./src/
-    js/     //支持 es6语法
-    less/   //存放 less
-```
-  
-  
-## 运行目录
-部署项目所需的代码部分
-```javascript
-./dist/
-    css/    //编译后的 css
-    js/     //编译、压缩后的 js 文件会自动生成在这里
-    lib/    //存放第三方依赖文件
-    pages/  //存放 html 页面
-    images/ //存放图片
+## Getting Start
+引入依赖jQuery 或者 Zepto
+```html
+<script src="jquery.js"></script>
+<script src="jQloader.js"></script>
 ```
   
   
@@ -102,58 +77,10 @@ $.progressBar
 .finish()           //走完进度条 100%
 .setColor('color')  //设置进度条颜色
 ```
-
-## 第三方组件封装
-
-### WebUploader
-封装上传组件的 UI交互功能
-```javascript
-$('#yourContanier').webuploader({
-    server: 'url',   //上传后台地址,必填项
-    
-    // 以下是可选项
-    
-    size: 80,        //回显缩略图尺寸 默认80
-    auto: false,     //自动上传 默认 false
-    fileNumLimit: 10, //最多上传限制，默认50
-    compress: {
-
-        // 裁切尺寸
-        width: 1600,
-        height: 1600,
-
-        // 图片质量，只有type为`image/jpeg`的时候才有效。
-        quality: 90,
-
-        // 是否允许放大，如果想要生成小图的时候不失真，此选项应该设置为false.
-        allowMagnify: false,
-
-        // 是否允许裁剪。
-        crop: false,
-
-        // 是否保留头部meta信息。
-        preserveHeaders: true,
-
-        // 如果发现压缩后文件大小比原来还大，则使用原来图片
-        // 此属性可能会影响图片自动纠正功能
-        noCompressIfLarger: false,
-
-        // 单位字节，如果图片大小小于此值，不会采用压缩。
-        compressSize: 0
-    }
-})
-```
-
   
-## 其他
 
-### 点击事件优化
-移动端也请直接使用 click 事件，不需要用 touch 事件了
+## 其他
 
 ### 支持 ajax 载入页面的 js 运行
 用过淘宝SUI Mobile的同学应该知道，他们也提供了前端静态路由功能，但是不能运行 ajxa 页面上的 js  
 本框架的 jQloader 库提供这项功能。并随着版本更新，会逐渐完善。  
-关于 jQloader 库，我会另开一个项目，感兴趣的同学请关注我的 github
-
-### 引用 CDN 资源
-项目正式上线时请将公共资源改为 CDN 链接，网上一搜一大堆，不懂就回家去吃土！
