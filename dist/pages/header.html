@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default navbar-static-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -8,13 +8,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
+      <a class="navbar-brand" href="#pages/welcome.html" id="home">jQloader</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="header">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#pages/getting-start.html">Start <span class="sr-only">(current)</span></a></li>
+        <li><a href="#pages/getting-start.html">Start <span class="sr-only">(current)</span></a></li>
         <li><a href="#pages/API.html">API</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -27,13 +27,23 @@
 
 
 <script>
+(function () {
+
+    var $lis = $('#header li');
     $('#header a').click(function (e) {
         var $a = $(this);
         if ($a.attr('href').indexOf('#')==0) {
             e.preventDefault()
         }
+        $lis.removeClass('active');
+        $a.parent().addClass('active');
         $('jq-router').loadPage({
             url: $a.attr('href').substr(1)
         })
     })
+
+    $('#home').click(function () {
+        $lis.removeClass('active')
+    })
+})()
 </script>

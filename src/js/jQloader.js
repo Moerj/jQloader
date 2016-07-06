@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.2
+ * jQloader v0.0.3
  * @license: MIT
  * Designed and built by Moer
  * github   ...
