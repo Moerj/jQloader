@@ -1,0 +1,31 @@
+<div class="contanier">
+    <h4>它能做什么?</h4>
+    <p>以 ajax 形式模块化你的静态 html，或是帮你自动请求加载一个页面</p>
+
+    <h4>安装</h4>
+    <p>只需要引入 jQeruy 和 jQloader</p>
+    <pre>
+
+&lt;script&gt; src="lib/jquery-3.0.0.min.js"&lt;/script&gt;
+
+&lt;script&gt; src="js/jQloader.js"&lt;/script&gt;
+    </pre>
+</div>
+
+
+<div>
+    <button type="button" class="routerButton">路由页面1</button>
+    <button type="button" class="routerButton">路由页面2</button>
+    <button type="button" class="routerButton">路由页面3</button>
+    <jq-router></jq-router>
+</div>
+
+<script>
+    $('.routerButton').click(function () {
+        var index = $(this).index()+1;
+        $('jq-router').loadPage({
+            url: 'pages/router'+index+'.html'
+        })
+    })
+
+</script>
