@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.3
+ * jQloader v0.0.4
  * @license: MIT
  * Designed and built by Moer
  * github   ...
@@ -101,8 +101,7 @@
                 $container.loadPage({
                     url: url,
                     history: false,
-                    progress: false,
-                    async: false
+                    progress: false
                 }, () => {
                     // 编译并ajax加载完成后的回调
                     $container.children().eq(0).unwrap();
@@ -114,24 +113,27 @@
 
     // 载入历史记录
     function _loadHitory() {
-        let domStr = history.state; //为 null 代表放回到最初历史
         let url = document.location.hash.substr(1);
-        let $container;
-
-        if (domStr) {
-            $container = $(domStr)
-        } else {
-            $container = $($('jq-router')[0])
-        }
-
-        if (!$container.length) {
-            return;
-        }
+        let $container = $('jq-router');
 
         if (url) {
-            $container.load(url);
+            $container.loadPage({
+                url: url,
+                history: false,
+                progress: false,
+                title: history.state
+            });
         } else {
-            $container.empty();
+            // 没有 url 参数，代表当前回到无路由页面
+            // 因为用清空或者重请求等方法很难判断逻辑
+            // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
+            let needReload = sessionStorage.getItem('jqRouterReload');
+            if (needReload) {
+                sessionStorage.removeItem('jqRouterReload');
+            }else {
+                sessionStorage.setItem('jqRouterReload',true);
+                window.location.reload();
+            }
         }
     }
 
@@ -151,24 +153,25 @@
 
     // 加载一个页面
     $.fn.loadPage = function(OPTS, call_back) {
-        let container = $(this);
+        let $container = $(this);
 
-        if (!container.length) {
-            console.error(container.selector + ' not a vaild selector');
-            return container;
+        if (!$container.length) {
+            console.error($container.selector + ' not a vaild selector');
+            return $container;
         }
 
         let DEFAULT = {
             history: true,
             progress: true,
             cache: true,
-            async: true
+            async: true,
+            title: null
         }
 
         OPTS = $.extend({}, DEFAULT, OPTS);
 
         // 初始化配置容器命名空间
-        _initNamespace(container[0]);
+        _initNamespace($container[0]);
 
         // 开启 loading 进度条
         if (OPTS.progress) $.progressBar.start();
@@ -182,12 +185,30 @@
             timeout: 10000,
             success: (data) => {
 
+                // 记录浏览器历史
+                if (OPTS.history && $container[0].localName==='jq-router') {
+                    // 处理 url 格式，浏览器地址栏去掉./开头
+                    let url = OPTS.url;
+                    if (OPTS.url.substring(0, 2) === './') {
+                        url = OPTS.url.substring(2)
+                    }
+
+                    // 浏览器地址栏操作
+                    history.pushState(OPTS.title, '', '#' + url);
+
+                }
+
+                // 修改页面 title
+                if (OPTS.title) {
+                    window.document.title = OPTS.title;
+                }
+
                 // 写入页面
-                container.html(data);
+                $container.html(data);
 
                 // 解决Zepto ajxa 请求到的页面 script 标签执行问题
                 if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
-                    let script = container.find('script');
+                    let script = $container.find('script');
                     for (let i = 0; i < script.length; i++) {
                         let src = script[i].src;
                         if (src) {
@@ -204,7 +225,7 @@
                 _compile();
 
                 // 运行容器上的回调方法组
-                container[0]._jQloader.loadFinish();
+                $container[0]._jQloader.loadFinish();
             },
             error: () => {
                 console.warn('页面载入失败！');
@@ -216,26 +237,7 @@
             }
         })
 
-        // 浏览器历史记录
-        if (OPTS.history) {
-            // 处理 url 格式，浏览器地址栏去掉./开头
-            let url = OPTS.url;
-            if (OPTS.url.substring(0, 2) === './') {
-                url = OPTS.url.substring(2)
-            }
-
-            // 改变浏览器地址栏
-            if (container.localName === 'body') {
-                history.pushState('body', '', '#' + url);
-            } else {
-                if (!container[0].id) {
-                    container[0].id = 'router-' + Date.parse(new Date());
-                }
-                history.pushState('#' + container[0].id, '', '#' + url);
-            }
-        }
-
-        return container;
+        return $container;
     }
 
     // 创建进度条
@@ -245,6 +247,7 @@
 
 
     $(() => {// jQloader所在页面/首页初始化 dom 完毕
+
         // 执行一次编译
         _compile();
 

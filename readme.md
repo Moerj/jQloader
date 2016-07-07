@@ -1,4 +1,4 @@
-# jQloader v0.0.3
+# jQloader v0.0.4
 
 https://github.com/Moerj/jQloader
   
@@ -52,10 +52,11 @@ ajax 方式加载页面到容器中
 // 在一个 div 容器中加载页面
 $('div').loadPage({
     url: 'url string',  //请求地址，必须
-    history: true,  //是否写入浏览器历史，默认 true
-    progress: true,    //是否加载时显示进度条，默认 true
-    cache: true,    //是否开启缓存，默认 true
-    async: true     //是否异步，默认 true
+    history: true,      //是否写入浏览器历史，默认 true
+    progress: true,     //是否加载时显示进度条，默认 true
+    cache: true,        //是否开启缓存，默认 true
+    async: true,        //是否异步，默认 true
+    title: 'string'        //页面名称，默认 null
 })
 ```
   
