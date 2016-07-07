@@ -1,6 +1,7 @@
 # jQloader v0.0.5
 
-https://github.com/Moerj/jQloader
+## Home
+https://moerj.github.io/jQloader
   
   
 ## 功能
@@ -12,7 +13,7 @@ https://github.com/Moerj/jQloader
 
   
   
-## Getting Start
+## 安装
 引入依赖jQuery 或者 Zepto
 ```html
 <script src="jquery.js"></script>
