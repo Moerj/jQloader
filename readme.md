@@ -1,4 +1,4 @@
-# jQloader v0.0.4
+# jQloader v0.0.5
 
 https://github.com/Moerj/jQloader
   
