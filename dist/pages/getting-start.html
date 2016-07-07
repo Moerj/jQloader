@@ -2,7 +2,12 @@
 
 <div class="contanier">
     <h4>它能做什么?</h4>
-    <p>以 ajax 形式模块化你的静态 html，或是帮你自动请求加载一个页面</p>
+    <p style="white-space: pre-line">轻松构建你的静态页面
+        - 模块化 html
+        - ajax 异步加载
+        - 保存浏览器历史
+        - 自动进度条
+    </p>
 
 
     <br>
@@ -21,26 +26,29 @@
     <p>使用html指令引入其他html</p>
     <pre>
 
-&lt;ng-include&gt; src="./header.html"&lt;/ng-include&gt;
+&lt;jq-include&gt; src="./header.html"&lt;/jq-include&gt;
     </pre>
 
     <br>
-    <h4>示列</h4>
-    <p>加载路由页面的图片</p>
-    <div>
-        <div id="simple"></div>
-        <button type="button" class="routerButton btn btn-default btn-sm">路由页面1</button>
-        <button type="button" class="routerButton btn btn-default btn-sm">路由页面2</button>
-        <button type="button" class="routerButton btn btn-default btn-sm">路由页面3</button>
-    </div>
+    <h4>路由容器</h4>
+    <p>使用loadPage方式加入页面到路由容器，会自动记录历史记录并生成路由</p>
+    <pre>
 
-    <script>
-        $('.routerButton').click(function () {
-            var index = $(this).index();
-            $('#simple').loadPage({
-                url: 'pages/router'+index+'.html'
-            })
-        })
+&lt;jq-router&gt; load html... &lt;/jq-router&gt;
+    </pre>
 
-    </script>
+    <br>
+    <h4>ajax加载</h4>
+    <p>loadPage方法可以加载任意一个 html 页面</p>
+    <pre>
+
+&lt;jq-router&gt; load html... &lt;/jq-router&gt;
+
+&lt;script&gt;
+    $('jq-router').loadPage({
+        url: './hellow.html'
+    })
+&lt;/script&gt;
+    </pre>
+
 </div>
