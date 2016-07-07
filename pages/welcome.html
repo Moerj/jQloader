@@ -1,0 +1,32 @@
+<style>
+    html,body{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+<div class="welcome">
+    <div class="tocenter">
+        <h1>
+            <span id="j" class="animated">j</span>
+            <span id="q" class="animated">Q</span>
+            <span id="l" class="animated">loader</span>
+        </h1>
+        <p id="p" class="animated" >让静态页面也能模块化</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        $('#j').show().addClass('fadeInDown');
+        setTimeout(function () {
+            $('#q').show().addClass('fadeInUp');
+        },300)
+        setTimeout(function () {
+            $('#l').show().addClass('bounceInRight');
+        },1000)
+        setTimeout(function () {
+            $('#p').show().addClass('fadeIn');
+        },2000)
+    })()
+</script>

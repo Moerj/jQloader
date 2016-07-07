@@ -1,0 +1,54 @@
+<jq-include src="pages/banner.html" id="bannerInclude"></jq-include>
+
+<div class="contanier">
+    <h4>它能做什么?</h4>
+    <p style="white-space: pre-line">轻松构建你的静态页面
+        - 模块化 html
+        - ajax 异步加载
+        - 保存浏览器历史
+        - 自动进度条
+    </p>
+
+
+    <br>
+    <h4>安装</h4>
+    <p>只需要引入 jQeruy 和 jQloader</p>
+    <pre>
+
+&lt;script&gt; src="lib/jquery-3.0.0.min.js"&lt;/script&gt;
+
+&lt;script&gt; src="js/jQloader.js"&lt;/script&gt;
+    </pre>
+
+
+    <br>
+    <h4>模板引擎</h4>
+    <p>使用html指令引入其他html</p>
+    <pre>
+
+&lt;jq-include&gt; src="./header.html"&lt;/jq-include&gt;
+    </pre>
+
+    <br>
+    <h4>路由容器</h4>
+    <p>使用loadPage方式加入页面到路由容器，会自动记录历史记录并生成路由</p>
+    <pre>
+
+&lt;jq-router&gt; load html... &lt;/jq-router&gt;
+    </pre>
+
+    <br>
+    <h4>ajax加载</h4>
+    <p>loadPage方法可以加载任意一个 html 页面</p>
+    <pre>
+
+&lt;jq-router&gt; load html... &lt;/jq-router&gt;
+
+&lt;script&gt;
+    $('jq-router').loadPage({
+        url: './hellow.html'
+    })
+&lt;/script&gt;
+    </pre>
+
+</div>
