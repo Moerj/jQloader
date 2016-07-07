@@ -81,7 +81,10 @@ gulp.task('default', [], function() {
         files: [
             "dist/**/*.css",
             "dist/**/*.js",
-            "dist/**/*.html"
+            "*.html",
+            "!node_modules/",
+            "!.git/",
+            "!.idea/"
         ],
 
         // 启动端口
@@ -89,8 +92,8 @@ gulp.task('default', [], function() {
 
         // 动态根路径
         server: {
-            baseDir: "./dist/",
-            index: "../index.html"
+            baseDir: "./",
+            index: "index.html"
         },
 
         // 静态化的路径
