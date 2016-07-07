@@ -81,7 +81,7 @@ gulp.task('default', [], function() {
         files: [
             "dist/**/*.css",
             "dist/**/*.js",
-            "*.html",
+            "dist/**/*.html",
             "!node_modules/",
             "!.git/",
             "!.idea/"
@@ -97,7 +97,10 @@ gulp.task('default', [], function() {
         },
 
         // 静态化的路径
-        serveStatic: ['.']
+        serveStatic: ['.'],
+
+        //不显示在浏览器中的任何通知。
+        notify: false
 
 
     });
