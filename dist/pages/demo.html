@@ -1,4 +1,4 @@
-<jq-include src="pages/banner.html" id="bannerInclude"></jq-include>
+<jq-include src="dist/pages/banner.html" id="bannerInclude"></jq-include>
 
 <div class="contanier">
     <h4>示列</h4>
@@ -14,7 +14,7 @@
         $('.routerButton').click(function () {
             var index = $(this).index();
             $('#simple').loadPage({
-                url: 'pages/router'+index+'.html'
+                url: 'dist/pages/router'+index+'.html'
             })
         })
 
