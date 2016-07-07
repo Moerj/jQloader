@@ -1,4 +1,4 @@
-# jQloader v0.0.5
+# jQloader v0.0.6
 
 ## Home
 https://moerj.github.io/jQloader
@@ -29,7 +29,7 @@ ajax 方式请求一个页面，并放入在该容器中
 <!-- somePage页面将会以 ajax 方式加进来 -->
 <jq-include src="./somePage.html"></jq-include>
 ```
-
+  
 ### jq-router 路由容器
 用于存放 ajax 页面的路由容器，整个浏览器窗口只能有一个jq-router，多余的将会被忽略。  
   
@@ -42,8 +42,16 @@ __用途：__
 ```
 __提示：__  
 如果你需要出示加载一个页面时有多个容器呈现其他 ajax 页面数据时，请使用 jq-include 指令。  
-jq-router 指令仅仅是用来首次加载时呈现 loadPage 方式请求的页面数据。
+jq-router 指令仅仅是用来首次加载时呈现 loadPage 方式请求的页面数据。  
   
+
+### a 标签
+- router  代替 href 属性，设置请求的url地址
+- to  设置请求页面存放容器，不设置时默认存放在 jq-router 容器  
+```html
+<!-- 将hellow页面加载到id为container的容器中 -->
+<a router="./hellow.html" to="#container"></a>
+```  
   
 ## 公共方法  
 

@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.5
+ * jQloader v0.0.6
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -91,6 +91,8 @@
 
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
+
+        // 编译include
         let includeDoms = document.getElementsByTagName('jq-include');
         for (let i = 0; i < includeDoms.length; i++) {
             let $loader = $(includeDoms[i]);
@@ -106,6 +108,33 @@
                     // 编译并ajax加载完成后的回调
                     $container.children().eq(0).unwrap();
                 })
+            }
+        }
+
+        // 动态绑定所有a标签
+        let links = document.getElementsByTagName('a');
+        for (var i = 0; i < links.length; i++) {
+            let a = links[i];
+            let attrRouter = a.getAttribute('router');
+            if (attrRouter) {
+                let url = attrRouter; //真正需要的路由地址
+                a.removeAttribute('router');//防止重复编译
+                a.href = '#' + url;
+                a.onclick = (event)=>{
+                    event.preventDefault();
+                    let container = a.getAttribute('to');
+                    if (container) {
+                        $(container).loadPage({
+                            url: url,
+                            title: a.innerHTML
+                        })
+                    }else{
+                        $('jq-router').loadPage({
+                            url: url,
+                            title: a.innerHTML
+                        })
+                    }
+                }
             }
         }
 
@@ -239,6 +268,7 @@
 
         return $container;
     }
+
 
     // 创建进度条
     if (!$.progressBar) {

@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader v0.0.5
+ * jQloader v0.0.6
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -121,9 +121,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
+
+        // 编译include
         var includeDoms = document.getElementsByTagName('jq-include');
-        for (var i = 0; i < includeDoms.length; i++) {
-            var $loader = $(includeDoms[i]);
+        for (var _i = 0; _i < includeDoms.length; _i++) {
+            var $loader = $(includeDoms[_i]);
             var url = $loader.attr('src');
             if (url) {
                 (function () {
@@ -139,6 +141,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     });
                 })();
             }
+        }
+
+        // 动态绑定所有a标签
+        var links = document.getElementsByTagName('a');
+
+        var _loop = function _loop() {
+            var a = links[i];
+            var attrRouter = a.getAttribute('router');
+            if (attrRouter) {
+                (function () {
+                    var url = attrRouter; //真正需要的路由地址
+                    a.removeAttribute('router'); //防止重复编译
+                    a.href = '#' + url;
+                    a.onclick = function (event) {
+                        event.preventDefault();
+                        var container = a.getAttribute('to');
+                        if (container) {
+                            $(container).loadPage({
+                                url: url,
+                                title: a.innerHTML
+                            });
+                        } else {
+                            $('jq-router').loadPage({
+                                url: url,
+                                title: a.innerHTML
+                            });
+                        }
+                    };
+                })();
+            }
+        };
+
+        for (var i = 0; i < links.length; i++) {
+            _loop();
         }
     }
 
