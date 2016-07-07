@@ -1,142 +1,26 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>JQloader by Moerj</title>
-  </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQloader</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/base.css">
+</head>
+<body>
+    <!-- 导航 -->
+    <jq-include src="dist/pages/header.html"></jq-include>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+    <!-- 路由容器 -->
+    <jq-router>
+        <jq-include src="dist/pages/welcome.html"></jq-include>
+    </jq-router>
 
-        <header>
-          <h1>JQloader</h1>
-          <h2>静态页面模块化工具</h2>
-        </header>
+    <!-- 页脚 -->
+    <!-- <jq-include src="dist/pages/footer.html"></jq-include> -->
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/Moerj/jQloader/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/Moerj/jQloader/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/Moerj/jQloader" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
-<a id="jqloader-v005" class="anchor" href="#jqloader-v005" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jQloader v0.0.5</h1>
-
-<p><a href="https://github.com/Moerj/jQloader">https://github.com/Moerj/jQloader</a></p>
-
-<h2>
-<a id="功能" class="anchor" href="#%E5%8A%9F%E8%83%BD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>功能</h2>
-
-<ul>
-<li>指令模板，html 页面直接引入其他页面</li>
-<li>动态加载，ajax 动态加载html页面</li>
-<li>历史记录，ajax 加载的页面会存入浏览器历史记录</li>
-<li>路由机制，由一个路由容器负责显示路由地址</li>
-<li>加载进度条，基础自动的进度条效果</li>
-</ul>
-
-<h2>
-<a id="getting-start" class="anchor" href="#getting-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Start</h2>
-
-<p>引入依赖jQuery 或者 Zepto</p>
-
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>jquery.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
-&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>jQloader.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
-
-<h2>
-<a id="指令库" class="anchor" href="#%E6%8C%87%E4%BB%A4%E5%BA%93" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>指令库</h2>
-
-<h3>
-<a id="jq-include-引入页面" class="anchor" href="#jq-include-%E5%BC%95%E5%85%A5%E9%A1%B5%E9%9D%A2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jq-include 引入页面</h3>
-
-<p>ajax 方式请求一个页面，并放入在该容器中</p>
-
-<div class="highlight highlight-text-html-basic"><pre><span class="pl-c">&lt;!-- somePage页面将会以 ajax 方式加进来 --&gt;</span>
-&lt;<span class="pl-ent">jq</span><span class="pl-e">-include</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>./somePage.html<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">jq</span><span class="pl-e">-include</span>&gt;</pre></div>
-
-<h3>
-<a id="jq-router-路由容器" class="anchor" href="#jq-router-%E8%B7%AF%E7%94%B1%E5%AE%B9%E5%99%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jq-router 路由容器</h3>
-
-<p>用于存放 ajax 页面的路由容器，整个浏览器窗口只能有一个jq-router，多余的将会被忽略。  </p>
-
-<p><strong>用途：</strong><br>
-呈现ajax页面的容器，主要用于首次载入页面用于显示地址栏#xxx.html部分的数据，如果页面上没有路由容器，则首次加载忽略路由地址。</p>
-
-<div class="highlight highlight-text-html-basic"><pre><span class="pl-c">&lt;!-- 把 loadPage 方法请求的数据塞入这里 --&gt;</span>
-&lt;<span class="pl-ent">jq</span><span class="pl-e">-router</span>&gt;&lt;/<span class="pl-ent">jq</span><span class="pl-e">-router</span>&gt;</pre></div>
-
-<p><strong>提示：</strong><br>
-如果你需要出示加载一个页面时有多个容器呈现其他 ajax 页面数据时，请使用 jq-include 指令。<br>
-jq-router 指令仅仅是用来首次加载时呈现 loadPage 方式请求的页面数据。</p>
-
-<h2>
-<a id="公共方法" class="anchor" href="#%E5%85%AC%E5%85%B1%E6%96%B9%E6%B3%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>公共方法</h2>
-
-<h3>
-<a id="loadpage-加载页面" class="anchor" href="#loadpage-%E5%8A%A0%E8%BD%BD%E9%A1%B5%E9%9D%A2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>loadPage 加载页面</h3>
-
-<p>ajax 方式加载页面到容器中</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-c">// 在一个 div 容器中加载页面</span>
-<span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>div<span class="pl-pds">'</span></span>).<span class="pl-en">loadPage</span>({
-    url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>url string<span class="pl-pds">'</span></span>,  <span class="pl-c">//请求地址，必须</span>
-    history<span class="pl-k">:</span> <span class="pl-c1">true</span>,      <span class="pl-c">//是否写入浏览器历史，默认 true</span>
-    progress<span class="pl-k">:</span> <span class="pl-c1">true</span>,     <span class="pl-c">//是否加载时显示进度条，默认 true</span>
-    cache<span class="pl-k">:</span> <span class="pl-c1">true</span>,        <span class="pl-c">//是否开启缓存，默认 true</span>
-    async<span class="pl-k">:</span> <span class="pl-c1">true</span>,        <span class="pl-c">//是否异步，默认 true</span>
-    title<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>        <span class="pl-c">//页面名称，默认 null</span>
-})</pre></div>
-
-<h3>
-<a id="loadfinish-加载页面后的回调" class="anchor" href="#loadfinish-%E5%8A%A0%E8%BD%BD%E9%A1%B5%E9%9D%A2%E5%90%8E%E7%9A%84%E5%9B%9E%E8%B0%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>loadFinish 加载页面后的回调</h3>
-
-<p>目标容器使用 loadPage 或者指令方式加载完数据后的回调</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>div<span class="pl-pds">'</span></span>).<span class="pl-en">loadFinish</span>(<span class="pl-k">function</span> () {
-    <span class="pl-c">// loadPage 完成，执行的代码</span>
-})</pre></div>
-
-<h3>
-<a id="progressbar-操作进度条" class="anchor" href="#progressbar-%E6%93%8D%E4%BD%9C%E8%BF%9B%E5%BA%A6%E6%9D%A1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>$.progressBar 操作进度条</h3>
-
-<p>顶部的进度条，页面加载时会自动执行。(注意：除非你有其他用途，通常进度条并不需要你去手动操作)</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">$</span>.<span class="pl-smi">progressBar</span>
-.<span class="pl-en">star</span>()             <span class="pl-c">//进度条开始</span>
-.<span class="pl-c1">stop</span>()             <span class="pl-c">//暂停</span>
-.<span class="pl-c1">reset</span>()            <span class="pl-c">//重置进度条 0%</span>
-.<span class="pl-en">finish</span>()           <span class="pl-c">//走完进度条 100%</span>
-.<span class="pl-en">setColor</span>(<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span>)  <span class="pl-c">//设置进度条颜色</span></pre></div>
-
-<h2>
-<a id="其他" class="anchor" href="#%E5%85%B6%E4%BB%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>其他</h2>
-
-<h3>
-<a id="支持-ajax-载入页面的-js-运行" class="anchor" href="#%E6%94%AF%E6%8C%81-ajax-%E8%BD%BD%E5%85%A5%E9%A1%B5%E9%9D%A2%E7%9A%84-js-%E8%BF%90%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>支持 ajax 载入页面的 js 运行</h3>
-
-<p>用过淘宝SUI Mobile的同学应该知道，他们也提供了前端静态路由功能，但是不能运行 ajxa 页面上的 js<br>
-本框架的 jQloader 库提供这项功能。并随着版本更新，会逐渐完善。  </p>
-        </section>
-
-        <footer>
-          JQloader is maintained by <a href="https://github.com/Moerj">Moerj</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
-    </div>
-  </body>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="dist/js/jQloader.js"></script>
+</body>
 </html>
