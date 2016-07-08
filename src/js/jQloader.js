@@ -115,10 +115,10 @@
         let links = document.getElementsByTagName('a');
         for (var i = 0; i < links.length; i++) {
             let a = links[i];
-            let attrRouter = a.getAttribute('router');
+            let attrRouter = a.getAttribute('load');
             if (attrRouter) {
                 let url = attrRouter; //真正需要的路由地址
-                a.removeAttribute('router');//防止重复编译
+                a.removeAttribute('load');//防止重复编译
                 a.href = '#' + url;
                 a.onclick = (event)=>{
                     event.preventDefault();

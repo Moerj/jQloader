@@ -30,15 +30,22 @@
     </pre>
 
     <br>
+    <p>使用 a 标签请求页面到指定容器</p>
+    <pre>
+
+&lt;a&gt; load="./header.html" to="#container"&lt;/a&gt;
+    </pre>
+
+    <br>
     <h4><i class="fa fa-gears"></i> 路由容器</h4>
-    <p>使用loadPage方式加入页面到路由容器，会自动记录历史记录并生成路由</p>
+    <p>使用js或a标签请求的页面放到路由容器中，会自动记录历史并生成路由</p>
     <pre>
 
 &lt;jq-router&gt; load html... &lt;/jq-router&gt;
     </pre>
 
     <br>
-    <h4><i class="fa fa-sitemap"></i> ajax加载</h4>
+    <h4><i class="fa fa-code"></i> ajax加载</h4>
     <p>loadPage方法可以加载任意一个 html 页面</p>
     <pre>
 

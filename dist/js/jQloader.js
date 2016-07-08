@@ -148,11 +148,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var _loop = function _loop() {
             var a = links[i];
-            var attrRouter = a.getAttribute('router');
+            var attrRouter = a.getAttribute('load');
             if (attrRouter) {
                 (function () {
                     var url = attrRouter; //真正需要的路由地址
-                    a.removeAttribute('router'); //防止重复编译
+                    a.removeAttribute('load'); //防止重复编译
                     a.href = '#' + url;
                     a.onclick = function (event) {
                         event.preventDefault();
