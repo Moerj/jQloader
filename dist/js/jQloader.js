@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader v0.0.6
+ * jQloader v0.0.7
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -13,6 +13,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 (function ($) {
     'use strict';
+
+    // 对一个 dom 建立jQloader的存储机制
+
+    var JQloader = function JQloader(dom) {
+        if (dom._jQloader === undefined) {
+            dom._jQloader = new Map();
+        }
+        return {
+            get: function get(key) {
+                return dom._jQloader[key];
+            },
+            set: function set(key, val) {
+                dom._jQloader[key] = val;
+            },
+            push: function push(key, val) {
+                if (dom._jQloader[key] === undefined) {
+                    dom._jQloader[key] = [];
+                }
+                dom._jQloader[key].push(val);
+            }
+        };
+    };
 
     // 加载时页面顶部进度条
 
@@ -99,27 +121,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return ProgressBar;
     }();
 
-    // 初始化 dom 对象下的命名空间，用于存放数据
-
-
-    function _initNamespace(dom) {
-        if (dom._jQloader === undefined) {
-            dom._jQloader = {}; //dom 上存放jQloader数据的命名空间
-        }
-        if (dom._jQloader.loadFinishEvents === undefined) {
-            dom._jQloader.loadFinishEvents = [];
-        }
-        if (dom._jQloader.loadFinish === undefined) {
-            dom._jQloader.loadFinish = function () {
-                var events = dom._jQloader.loadFinishEvents;
-                for (var i = 0; i < events.length; i++) {
-                    events[i]();
-                }
-            };
-        }
-    }
-
     // 编译当前页面 html 标签上的 loadPage 指令
+
+
     function _compile() {
 
         // 编译include
@@ -143,38 +147,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }
 
-        // 动态绑定所有a标签
-        var links = document.getElementsByTagName('a');
-
-        var _loop = function _loop() {
-            var a = links[i];
-            var attrRouter = a.getAttribute('load');
-            if (attrRouter) {
-                (function () {
-                    var url = attrRouter; //真正需要的路由地址
-                    a.removeAttribute('load'); //防止重复编译
-                    a.href = '#' + url;
-                    a.onclick = function (event) {
-                        event.preventDefault();
-                        var container = a.getAttribute('to');
-                        if (container) {
-                            $(container).loadPage({
-                                url: url,
-                                title: a.innerHTML
-                            });
-                        } else {
-                            $('jq-router').loadPage({
-                                url: url,
-                                title: a.innerHTML
-                            });
-                        }
-                    };
-                })();
+        // 编译 a 标签
+        var _compile_a = function _compile_a(a) {
+            var url = a.getAttribute('load');
+            if (url && !JQloader(a).get('compiled')) {
+                JQloader(a).set('compiled', true);
+                a.onclick = function (event) {
+                    event.preventDefault();
+                    var container = a.getAttribute('to');
+                    if (container) {
+                        $(container).loadPage({
+                            url: url,
+                            title: a.innerHTML
+                        });
+                    } else {
+                        $('jq-router').loadPage({
+                            url: url,
+                            title: a.innerHTML
+                        });
+                    }
+                };
             }
         };
-
+        var links = document.getElementsByTagName('a');
         for (var i = 0; i < links.length; i++) {
-            _loop();
+            _compile_a(links[i]);
         }
     }
 
@@ -182,6 +179,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function _loadHitory() {
         var url = document.location.hash.substr(1);
         var $container = $('jq-router');
+
+        if (!$container.length) {
+            return;
+        }
 
         if (url) {
             $container.loadPage({
@@ -210,10 +211,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 
     // 暴露的公共方法 ==============================
-    // loadPage 加载完后的回调
+    // loadPage 加载完后的回调组，用于指令触发load后的回调
     $.fn.loadFinish = function (call_back) {
         var container = $(this);
-        container[0]._jQloader.loadFinishEvents.push(call_back);
+        JQloader(container[0]).push('loadPageCallBacks', call_back);
         return container;
     };
 
@@ -235,9 +236,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
 
         OPTS = $.extend({}, DEFAULT, OPTS);
-
-        // 初始化配置容器命名空间
-        _initNamespace($container[0]);
 
         // 开启 loading 进度条
         if (OPTS.progress) $.progressBar.start();
@@ -274,14 +272,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 // 解决Zepto ajxa 请求到的页面 script 标签执行问题
                 if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
                     var script = $container.find('script');
-                    for (var i = 0; i < script.length; i++) {
-                        var src = script[i].src;
+                    for (var _i2 = 0; _i2 < script.length; _i2++) {
+                        var src = script[_i2].src;
                         if (src) {
                             // Zepto不会运行外联script
                             $.get(src);
                         } else {
                             // Zepto会执行两次页面的内联script
-                            $(script[i]).remove();
+                            $(script[_i2]).remove();
                         }
                     }
                 }
@@ -290,7 +288,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 _compile();
 
                 // 运行容器上的回调方法组
-                $container[0]._jQloader.loadFinish();
+                var callBacks = JQloader($container[0]).get('loadPageCallBacks');
+                if (callBacks) {
+                    for (var i = 0; i < callBacks.length; i++) {
+                        callBacks[i]();
+                    }
+                }
             },
             error: function error() {
                 console.warn('页面载入失败！');

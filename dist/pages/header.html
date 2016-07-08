@@ -34,7 +34,7 @@
     var $lis = $('#header li');
     $('#headBar a').click(function () {
         var $a = $(this);
-        if ($a.attr('href').indexOf('#')==0) {
+        if ($a.attr('load')) {
             $lis.removeClass('active');
             $a.parent().addClass('active');
         }

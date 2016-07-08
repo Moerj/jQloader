@@ -1,5 +1,7 @@
 .navbar {
   margin: 0; }
+  .navbar a {
+    cursor: pointer; }
 
 .banner {
   width: 100%;
@@ -16,8 +18,8 @@
 .welcome {
   width: 100%;
   height: 100%;
-  -webkit-animation: welcomeBackground 5s infinite alternate;
-  animation: welcomeBackground 5s infinite alternate;
+  -webkit-animation: welcomeBackground 10s infinite alternate;
+  animation: welcomeBackground 10s infinite alternate;
   color: #fff;
   position: relative; }
   .welcome .animated {

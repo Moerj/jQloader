@@ -10,6 +10,9 @@ $bgColor2:#39eeb8;
 
 .navbar{
     margin: 0;
+    a{
+        cursor: pointer;
+    }
 }
 .banner {
     width: 100%;
@@ -27,7 +30,7 @@ $bgColor2:#39eeb8;
 .welcome {
     width: 100%;
     height: 100%;
-    animation: welcomeBackground 5s infinite alternate;
+    animation: welcomeBackground 10s infinite alternate;
     color: #fff;
     position: relative;
 

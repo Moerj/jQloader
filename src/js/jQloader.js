@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.6
+ * jQloader v0.0.7
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -7,6 +7,27 @@
 
 (($) => {
     'use strict';
+
+    // 对一个 dom 建立jQloader的存储机制
+    const JQloader = (dom) => {
+        if (dom._jQloader === undefined) {
+            dom._jQloader = new Map();
+        }
+        return {
+            get: (key) => {
+                return dom._jQloader[key]
+            },
+            set: (key, val) => {
+                dom._jQloader[key] = val
+            },
+            push: (key, val) => {
+                if (dom._jQloader[key] === undefined) {
+                    dom._jQloader[key] = []
+                }
+                dom._jQloader[key].push(val)
+            }
+        }
+    }
 
     // 加载时页面顶部进度条
     class ProgressBar {
@@ -71,24 +92,6 @@
     }
 
 
-    // 初始化 dom 对象下的命名空间，用于存放数据
-    function _initNamespace(dom) {
-        if (dom._jQloader === undefined) {
-            dom._jQloader = {}; //dom 上存放jQloader数据的命名空间
-        }
-        if (dom._jQloader.loadFinishEvents === undefined) {
-            dom._jQloader.loadFinishEvents = []
-        }
-        if (dom._jQloader.loadFinish === undefined) {
-            dom._jQloader.loadFinish = () => {
-                let events = dom._jQloader.loadFinishEvents;
-                for (let i = 0; i < events.length; i++) {
-                    events[i]();
-                }
-            }
-        }
-    }
-
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
 
@@ -111,16 +114,12 @@
             }
         }
 
-        // 动态绑定所有a标签
-        let links = document.getElementsByTagName('a');
-        for (var i = 0; i < links.length; i++) {
-            let a = links[i];
-            let attrRouter = a.getAttribute('load');
-            if (attrRouter) {
-                let url = attrRouter; //真正需要的路由地址
-                a.removeAttribute('load');//防止重复编译
-                a.href = '#' + url;
-                a.onclick = (event)=>{
+        // 编译 a 标签
+        const _compile_a = (a) => {
+            let url = a.getAttribute('load');
+            if (url && !JQloader(a).get('compiled')) {
+                JQloader(a).set('compiled', true);
+                a.onclick = (event) => {
                     event.preventDefault();
                     let container = a.getAttribute('to');
                     if (container) {
@@ -128,7 +127,7 @@
                             url: url,
                             title: a.innerHTML
                         })
-                    }else{
+                    } else {
                         $('jq-router').loadPage({
                             url: url,
                             title: a.innerHTML
@@ -137,6 +136,10 @@
                 }
             }
         }
+        let links = document.getElementsByTagName('a');
+        for (var i = 0; i < links.length; i++) {
+            _compile_a(links[i]);
+        }
 
     }
 
@@ -144,6 +147,10 @@
     function _loadHitory() {
         let url = document.location.hash.substr(1);
         let $container = $('jq-router');
+
+        if (!$container.length) {
+            return;
+        }
 
         if (url) {
             $container.loadPage({
@@ -159,8 +166,8 @@
             let needReload = sessionStorage.getItem('jqRouterReload');
             if (needReload) {
                 sessionStorage.removeItem('jqRouterReload');
-            }else {
-                sessionStorage.setItem('jqRouterReload',true);
+            } else {
+                sessionStorage.setItem('jqRouterReload', true);
                 window.location.reload();
             }
         }
@@ -173,10 +180,10 @@
 
 
     // 暴露的公共方法 ==============================
-    // loadPage 加载完后的回调
+    // loadPage 加载完后的回调组，用于指令触发load后的回调
     $.fn.loadFinish = function(call_back) {
         let container = $(this);
-        container[0]._jQloader.loadFinishEvents.push(call_back);
+        JQloader(container[0]).push('loadPageCallBacks',call_back)
         return container
     }
 
@@ -199,8 +206,6 @@
 
         OPTS = $.extend({}, DEFAULT, OPTS);
 
-        // 初始化配置容器命名空间
-        _initNamespace($container[0]);
 
         // 开启 loading 进度条
         if (OPTS.progress) $.progressBar.start();
@@ -215,7 +220,7 @@
             success: (data) => {
 
                 // 记录浏览器历史
-                if (OPTS.history && $container[0].localName==='jq-router') {
+                if (OPTS.history && $container[0].localName === 'jq-router') {
                     // 处理 url 格式，浏览器地址栏去掉./开头
                     let url = OPTS.url;
                     if (OPTS.url.substring(0, 2) === './') {
@@ -254,7 +259,12 @@
                 _compile();
 
                 // 运行容器上的回调方法组
-                $container[0]._jQloader.loadFinish();
+                let callBacks = JQloader($container[0]).get('loadPageCallBacks');
+                if (callBacks) {
+                    for (var i = 0; i < callBacks.length; i++) {
+                        callBacks[i]();
+                    }
+                }
             },
             error: () => {
                 console.warn('页面载入失败！');
@@ -276,7 +286,7 @@
     }
 
 
-    $(() => {// jQloader所在页面/首页初始化 dom 完毕
+    $(() => { // jQloader所在页面/首页初始化 dom 完毕
 
         // 执行一次编译
         _compile();
