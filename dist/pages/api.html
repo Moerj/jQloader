@@ -1,0 +1,22 @@
+<jq-include src="dist/pages/banner.html" id="bannerInclude"></jq-include>
+
+<div class="container">
+
+    <div id="markdownContainer" style="white-space: pre-line;">
+    </div>
+
+    <script>
+        $.getScript('https://cdn.bootcss.com/markdown-it/7.0.0/markdown-it.min.js',function () {
+            $.ajax({
+                url: './readme.md'
+            })
+            .done(function(data) {
+                var md = window.markdownit();
+                var result = md.render(data);
+                $('#markdownContainer').append(result);
+                Prism.highlightAll('markup');
+                Prism.highlightAll('javascript');
+            })
+        })
+    </script>
+</div>
