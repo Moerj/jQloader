@@ -5,7 +5,7 @@
         overflow: hidden;
     }
 </style>
-<div class="welcome">
+<div class="welcome" id="welcome">
     <div class="tocenter">
         <h1>
             <span id="j" class="animated">j</span>
@@ -18,6 +18,10 @@
 
 <script>
     (function() {
+        $('#welcome').click(function () {
+            $('#start').click();
+        })
+
         $('#j').show().addClass('fadeInDown');
         setTimeout(function () {
             $('#q').show().addClass('fadeInUp');
