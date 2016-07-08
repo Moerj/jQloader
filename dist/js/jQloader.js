@@ -127,14 +127,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function _compile() {
 
         // 编译include
-        var includeDoms = document.getElementsByTagName('jq-include');
-        for (var _i = 0; _i < includeDoms.length; _i++) {
-            var $loader = $(includeDoms[_i]);
-            var url = $loader.attr('src');
+        var _compile_jqInclude = function _compile_jqInclude(dom) {
+            var $dom = $(dom);
+            var url = $dom.attr('src');
             if (url) {
                 (function () {
                     var $container = $('<div></div>');
-                    $loader.replaceWith($container);
+                    $dom.replaceWith($container);
                     $container.loadPage({
                         url: url,
                         history: false,
@@ -145,6 +144,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     });
                 })();
             }
+        };
+        var includeDoms = document.getElementsByTagName('jq-include');
+        for (var _i = 0; _i < includeDoms.length; _i++) {
+            _compile_jqInclude(includeDoms[_i]);
         }
 
         // 编译 a 标签

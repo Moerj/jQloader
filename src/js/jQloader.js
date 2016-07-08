@@ -96,13 +96,12 @@
     function _compile() {
 
         // 编译include
-        let includeDoms = document.getElementsByTagName('jq-include');
-        for (let i = 0; i < includeDoms.length; i++) {
-            let $loader = $(includeDoms[i]);
-            let url = $loader.attr('src');
+        const _compile_jqInclude = (dom) => {
+            let $dom = $(dom);
+            let url = $dom.attr('src');
             if (url) {
                 let $container = $('<div></div>');
-                $loader.replaceWith($container);
+                $dom.replaceWith($container);
                 $container.loadPage({
                     url: url,
                     history: false,
@@ -112,6 +111,10 @@
                     $container.children().eq(0).unwrap();
                 })
             }
+        }
+        let includeDoms = document.getElementsByTagName('jq-include');
+        for (let i = 0; i < includeDoms.length; i++) {
+            _compile_jqInclude(includeDoms[i])
         }
 
         // 编译 a 标签

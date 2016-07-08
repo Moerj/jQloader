@@ -13,42 +13,37 @@
     <br>
     <h4><i class="fa fa-download"></i> 安装</h4>
     <p>只需要引入 jQeruy 和 jQloader</p>
-    <pre>
-
+    <pre><code class="language-markup">
 &lt;script&gt; src="jquery.js"&lt;/script&gt;
 
 &lt;script&gt; src="jQloader.js"&lt;/script&gt;
-    </pre>
+    </code></pre>
 
 
     <br>
     <h4><i class="fa fa-file-code-o"></i> 模板引擎</h4>
     <p>使用html指令引入其他html</p>
-    <pre>
-
+    <pre><code class="language-markup">
 &lt;jq-include&gt; src="./header.html"&lt;/jq-include&gt;
-    </pre>
+    </code></pre>
 
     <br>
     <p>使用 a 标签请求页面到指定容器</p>
-    <pre>
-
+    <pre><code class="language-markup">
 &lt;a&gt; load="./header.html" to="#container"&lt;/a&gt;
-    </pre>
+    </code></pre>
 
     <br>
     <h4><i class="fa fa-gears"></i> 路由容器</h4>
     <p>使用js或a标签请求的页面放到路由容器中，会自动记录历史并生成路由</p>
-    <pre>
-
+    <pre><code class="language-markup">
 &lt;jq-router&gt; load html... &lt;/jq-router&gt;
-    </pre>
+    </code></pre>
 
     <br>
     <h4><i class="fa fa-code"></i> ajax加载</h4>
     <p>loadPage方法可以加载任意一个 html 页面</p>
-    <pre>
-
+    <pre><code class="language-javascript">
 &lt;jq-router&gt; load html... &lt;/jq-router&gt;
 
 &lt;script&gt;
@@ -56,6 +51,13 @@
         url: './hellow.html'
     })
 &lt;/script&gt;
-    </pre>
+    </code></pre>
+
+    <script>
+        (function () {
+            Prism.highlightAll('markup');
+            Prism.highlightAll('javascript');
+        })()
+    </script>
 
 </div>

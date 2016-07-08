@@ -11,13 +11,20 @@
 
     <br><br>
 
-    <pre>
+    <pre><code class="language-markup">
 
 &lt;p&gt;异步加载页面&lt;/p&gt;
 &lt;div id="simple"&gt;&lt;/div&gt;
 &lt;a load="dist/pages/router1.html" to="#simple"&gt;加载页面1&lt;/a&gt;
 &lt;a load="dist/pages/router2.html" to="#simple"&gt;加载页面2&lt;/a&gt;
 &lt;a load="dist/pages/router3.html" to="#simple"&gt;加载页面3&lt;/a&gt;
-    </pre>
+    </code></pre>
+
+    <script>
+        (function () {
+            Prism.highlightAll('markup');
+            Prism.highlightAll('javascript');
+        })()
+    </script>
 
 </div>
