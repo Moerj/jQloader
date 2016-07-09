@@ -148,19 +148,28 @@
 
     // 载入历史记录
     function _loadHitory() {
-        let url = document.location.hash.substr(1);
-        let $container = $('jq-router');
+        let historyData = history.state;
+        let $container;
 
-        if (!$container.length) {
-            return;
-        }
+        if (historyData) {
+            let url = historyData.url;
 
-        if (url) {
+            // 指定读取历史页面的容器
+            if (historyData.id) {
+                $container = $('#'+historyData.id)
+            }else{
+                $container = $('jq-router')
+            }
+
+            if (!$container.length) {
+                return;
+            }
+
             $container.loadPage({
                 url: url,
                 history: false,
                 progress: false,
-                title: history.state
+                title: historyData.title
             });
         } else {
             // 没有 url 参数，代表当前回到无路由页面
@@ -176,10 +185,16 @@
         }
     }
 
-    // 浏览器历史跳转
+    // 地址栏改变
     window.addEventListener("popstate", () => {
         _loadHitory()
     });
+
+    // 地址栏 hash 改变
+    /* window.addEventListener("hashchange", (e) => {
+        e.preventDefault();
+        console.log(document.location.hash);
+    }); */
 
 
     // 暴露的公共方法 ==============================
@@ -231,7 +246,11 @@
                     }
 
                     // 浏览器地址栏操作
-                    history.pushState(OPTS.title, '', '#' + url);
+                    history.pushState({
+                        title: OPTS.title,
+                        id: $container.attr('id'),
+                        url: OPTS.url
+                    }, '', '#' + url);
 
                 }
 

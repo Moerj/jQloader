@@ -180,19 +180,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // 载入历史记录
     function _loadHitory() {
-        var url = document.location.hash.substr(1);
-        var $container = $('jq-router');
+        var historyData = history.state;
+        var $container = void 0;
 
-        if (!$container.length) {
-            return;
-        }
+        if (historyData) {
+            var url = historyData.url;
 
-        if (url) {
+            // 指定读取历史页面的容器
+            if (historyData.id) {
+                $container = $('#' + historyData.id);
+            } else {
+                $container = $('jq-router');
+            }
+
+            if (!$container.length) {
+                return;
+            }
+
             $container.loadPage({
                 url: url,
                 history: false,
                 progress: false,
-                title: history.state
+                title: historyData.title
             });
         } else {
             // 没有 url 参数，代表当前回到无路由页面
@@ -208,10 +217,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
     }
 
-    // 浏览器历史跳转
+    // 地址栏改变
     window.addEventListener("popstate", function () {
         _loadHitory();
     });
+
+    // 地址栏 hash 改变
+    /* window.addEventListener("hashchange", (e) => {
+        e.preventDefault();
+        console.log(document.location.hash);
+    }); */
 
     // 暴露的公共方法 ==============================
     // loadPage 加载完后的回调组，用于指令触发load后的回调
@@ -261,7 +276,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                     // 浏览器地址栏操作
-                    history.pushState(OPTS.title, '', '#' + url);
+                    history.pushState({
+                        title: OPTS.title,
+                        id: $container.attr('id'),
+                        url: OPTS.url
+                    }, '', '#' + url);
                 }
 
                 // 修改页面 title
