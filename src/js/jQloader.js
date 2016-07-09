@@ -118,33 +118,80 @@
         }
 
         // 编译 a 标签
-        const _compile_a = (a) => {
-            let url = a.getAttribute('load');
-            if (url && !JQloader(a).get('compiled')) {
-                JQloader(a).set('compiled', true);
-                a.onclick = (event) => {
-                    event.preventDefault();
-                    let container = a.getAttribute('to');
-                    if (container) {
-                        $(container).loadPage({
-                            url: url,
-                            title: a.innerHTML
-                        })
-                    } else {
-                        $('jq-router').loadPage({
-                            url: url,
-                            title: a.innerHTML
-                        })
-                    }
-                }
-            }
-        }
-        let links = document.getElementsByTagName('a');
-        for (var i = 0; i < links.length; i++) {
-            _compile_a(links[i]);
-        }
+        // const _compile_a = (a) => {
+        //     JQloader(a).set('compiled', true);
+        //
+        //     // load 类型
+        //     let loadUrl = a.getAttribute('load');
+        //     if (loadUrl) {
+        //         a.onclick = (event) => {
+        //             event.preventDefault();
+        //             let container = a.getAttribute('to');
+        //             if (container) {
+        //                 $(container).loadPage({
+        //                     url: loadUrl,
+        //                     title: a.innerHTML
+        //                 })
+        //             } else {
+        //                 $('jq-router').loadPage({
+        //                     url: loadUrl,
+        //                     title: a.innerHTML
+        //                 })
+        //             }
+        //         }
+        //     }
+        //
+        //     // 锚点类型
+        //     /* let href = a.href;
+        //     if (href.indexOf('#')==0) {
+        //         console.log('#');
+        //     } */
+        // }
+        // let links = document.getElementsByTagName('a');
+        // for (var i = 0; i < links.length; i++) {
+        //     if (!JQloader(links[i]).get('compiled')) {
+        //         _compile_a(links[i]);
+        //     }
+        // }
 
     }
+
+    $('body').on('click','a',(e) => {
+        // e.stopPropagation();
+        e.preventDefault();
+
+        let a = e.currentTarget;
+
+        // load 类型
+        let loadUrl = a.getAttribute('load');
+        if (loadUrl) {
+            let container = a.getAttribute('to');
+            if (container) {
+                $(container).loadPage({
+                    url: loadUrl,
+                    title: a.innerHTML
+                })
+            } else {
+                $('jq-router').loadPage({
+                    url: loadUrl,
+                    title: a.innerHTML
+                })
+            }
+            return false;
+        }
+
+        // 锚点类型
+        let hash = a.hash;
+        if (hash) {
+            let id = hash.substr(1);
+            // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
+            let $anchor = $(document.getElementById(id));
+            // 滚动到锚点元素
+            $('html, body').animate({scrollTop: $anchor.offset().top}, 300);
+        }
+
+
+    })
 
     // 载入历史记录
     function _loadHitory() {

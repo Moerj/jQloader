@@ -146,37 +146,82 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         };
         var includeDoms = document.getElementsByTagName('jq-include');
-        for (var _i = 0; _i < includeDoms.length; _i++) {
-            _compile_jqInclude(includeDoms[_i]);
+        for (var i = 0; i < includeDoms.length; i++) {
+            _compile_jqInclude(includeDoms[i]);
         }
 
         // 编译 a 标签
-        var _compile_a = function _compile_a(a) {
-            var url = a.getAttribute('load');
-            if (url && !JQloader(a).get('compiled')) {
-                JQloader(a).set('compiled', true);
-                a.onclick = function (event) {
-                    event.preventDefault();
-                    var container = a.getAttribute('to');
-                    if (container) {
-                        $(container).loadPage({
-                            url: url,
-                            title: a.innerHTML
-                        });
-                    } else {
-                        $('jq-router').loadPage({
-                            url: url,
-                            title: a.innerHTML
-                        });
-                    }
-                };
-            }
-        };
-        var links = document.getElementsByTagName('a');
-        for (var i = 0; i < links.length; i++) {
-            _compile_a(links[i]);
-        }
+        // const _compile_a = (a) => {
+        //     JQloader(a).set('compiled', true);
+        //
+        //     // load 类型
+        //     let loadUrl = a.getAttribute('load');
+        //     if (loadUrl) {
+        //         a.onclick = (event) => {
+        //             event.preventDefault();
+        //             let container = a.getAttribute('to');
+        //             if (container) {
+        //                 $(container).loadPage({
+        //                     url: loadUrl,
+        //                     title: a.innerHTML
+        //                 })
+        //             } else {
+        //                 $('jq-router').loadPage({
+        //                     url: loadUrl,
+        //                     title: a.innerHTML
+        //                 })
+        //             }
+        //         }
+        //     }
+        //
+        //     // 锚点类型
+        //     /* let href = a.href;
+        //     if (href.indexOf('#')==0) {
+        //         console.log('#');
+        //     } */
+        // }
+        // let links = document.getElementsByTagName('a');
+        // for (var i = 0; i < links.length; i++) {
+        //     if (!JQloader(links[i]).get('compiled')) {
+        //         _compile_a(links[i]);
+        //     }
+        // }
     }
+
+    $('body').on('click', 'a', function (e) {
+        // e.stopPropagation();
+        e.preventDefault();
+
+        var a = e.currentTarget;
+
+        // load 类型
+        var loadUrl = a.getAttribute('load');
+        if (loadUrl) {
+            var container = a.getAttribute('to');
+            if (container) {
+                $(container).loadPage({
+                    url: loadUrl,
+                    title: a.innerHTML
+                });
+            } else {
+                $('jq-router').loadPage({
+                    url: loadUrl,
+                    title: a.innerHTML
+                });
+            }
+            return false;
+        }
+
+        // 锚点类型
+        var hash = a.hash;
+        if (hash) {
+            var id = hash.substr(1);
+            // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
+            var $anchor = $(document.getElementById(id));
+            // 滚动到锚点元素
+            $('html, body').animate({ scrollTop: $anchor.offset().top }, 300);
+        }
+    });
 
     // 载入历史记录
     function _loadHitory() {
@@ -294,14 +339,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 // 解决Zepto ajxa 请求到的页面 script 标签执行问题
                 if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
                     var script = $container.find('script');
-                    for (var _i2 = 0; _i2 < script.length; _i2++) {
-                        var src = script[_i2].src;
+                    for (var _i = 0; _i < script.length; _i++) {
+                        var src = script[_i].src;
                         if (src) {
                             // Zepto不会运行外联script
                             $.get(src);
                         } else {
                             // Zepto会执行两次页面的内联script
-                            $(script[_i2]).remove();
+                            $(script[_i]).remove();
                         }
                     }
                 }
