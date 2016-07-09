@@ -59,7 +59,7 @@ gulp.task('js-es2015', function() {
 
 gulp.task('js-compress', function() {
     // js编译并压缩
-    return gulp.src('dist/js/**/*.js')
+    return gulp.src(['dist/js/jQloader.js','!dist/js/**/*.min.js'])
         .pipe(uglify({
             preserveComments: 'license'
         }))
@@ -106,5 +106,6 @@ gulp.task('default', [], function() {
     // 文件改变，自动执行编译或打包的任务
     gulp.watch(jsSrc, ['js-es2015'])
     gulp.watch(sassSrc, ['sass'])
+    gulp.watch('dist/js/jQloader.js',['js-compress'])
 
 });
