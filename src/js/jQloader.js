@@ -1,5 +1,5 @@
 /**
- * jQloader v0.0.7
+ * jQloader v0.0.8
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -256,7 +256,7 @@
                         title: OPTS.title,
                         id: $container.attr('id'),
                         url: OPTS.url
-                    }, '', '?' + url);
+                    }, '', '#' + url);
 
                 }
 

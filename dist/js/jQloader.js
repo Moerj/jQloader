@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader v0.0.7
+ * jQloader v0.0.8
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader
@@ -149,45 +149,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         for (var i = 0; i < includeDoms.length; i++) {
             _compile_jqInclude(includeDoms[i]);
         }
-
-        // 编译 a 标签
-        // const _compile_a = (a) => {
-        //     JQloader(a).set('compiled', true);
-        //
-        //     // load 类型
-        //     let loadUrl = a.getAttribute('load');
-        //     if (loadUrl) {
-        //         a.onclick = (event) => {
-        //             event.preventDefault();
-        //             let container = a.getAttribute('to');
-        //             if (container) {
-        //                 $(container).loadPage({
-        //                     url: loadUrl,
-        //                     title: a.innerHTML
-        //                 })
-        //             } else {
-        //                 $('jq-router').loadPage({
-        //                     url: loadUrl,
-        //                     title: a.innerHTML
-        //                 })
-        //             }
-        //         }
-        //     }
-        //
-        //     // 锚点类型
-        //     /* let href = a.href;
-        //     if (href.indexOf('#')==0) {
-        //         console.log('#');
-        //     } */
-        // }
-        // let links = document.getElementsByTagName('a');
-        // for (var i = 0; i < links.length; i++) {
-        //     if (!JQloader(links[i]).get('compiled')) {
-        //         _compile_a(links[i]);
-        //     }
-        // }
     }
 
+    // 拦截并重写 a 标签事件
     $('body').on('click', 'a', function (e) {
         // e.stopPropagation();
         e.preventDefault();
@@ -257,7 +221,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 sessionStorage.removeItem('jqRouterReload');
             } else {
                 sessionStorage.setItem('jqRouterReload', true);
-                window.location.reload();
+                window.location.replace(window.location.href);
             }
         }
     }
@@ -266,12 +230,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     window.addEventListener("popstate", function () {
         _loadHitory();
     });
-
-    // 地址栏 hash 改变
-    /* window.addEventListener("hashchange", (e) => {
-        e.preventDefault();
-        console.log(document.location.hash);
-    }); */
 
     // 暴露的公共方法 ==============================
     // loadPage 加载完后的回调组，用于指令触发load后的回调
