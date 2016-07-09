@@ -1,16 +1,14 @@
-$bgColor1:#78baf2;
-$bgColor2:#39eeb8;
-
-@mixin gradient{
+$bgColor1: #78baf2;
+$bgColor2: #39eeb8;
+@mixin gradient {
     background: linear-gradient(to right, $bgColor1, $bgColor2);
 }
-@mixin gradient-back{
+@mixin gradient-back {
     background: linear-gradient(to right, $bgColor2, $bgColor1);
 }
-
-.navbar{
+.navbar {
     margin: 0;
-    a{
+    a {
         cursor: pointer;
     }
 }
@@ -33,43 +31,39 @@ $bgColor2:#39eeb8;
     animation: welcomeBackground 10s infinite alternate;
     color: #fff;
     position: relative;
-
-    .animated{
+    .animated {
         display: none;
     }
-
-    .tocenter{
+    .tocenter {
         position: absolute;
-        left:50%;
+        left: 50%;
         top: 50%;
         margin-top: -20px;
         margin-left: -150px;
     }
-
     h1 {
         font-size: 80px;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.31);
         position: relative;
         width: 330px;
-        &>*{
+        & > * {
             position: absolute;
             bottom: 0;
         }
-        #j{
+        #j {
             left: 0;
         }
-        #q{
+        #q {
             left: 20px;
         }
-        #l{
+        #l {
             left: 80px;
         }
     }
-    p{
+    p {
         font-size: 20px;
         text-align: center;
     }
-
     @keyframes welcomeBackground {
         from {
             background-color: $bgColor1;
@@ -82,15 +76,17 @@ $bgColor2:#39eeb8;
 .container {
     padding: 10px;
     position: relative;
-    #markdownContainer{
-        float: left;
+    #markdownContainer {
+        max-width: 870px;
     }
-    #markdownTree{
-        float: left;
-        position: relative !important;
+    #markdownTree {
+        position: absolute !important;
         right: 20px !important;
         top: 20px !important;
         left: auto !important;
         // border: 1px solid #ddd;
+        @media screen and (max-width: 992px) {
+            display: none;
+        }
     }
 }
