@@ -122,14 +122,12 @@
 
     // 拦截并重写 a 标签事件
     $('body').on('click','a',(e) => {
-        // e.stopPropagation();
-        e.preventDefault();
-
         let a = e.currentTarget;
 
         // load 类型
         let loadUrl = a.getAttribute('load');
         if (loadUrl) {
+            e.preventDefault();
             let container = a.getAttribute('to');
             if (container) {
                 $(container).loadPage({
@@ -148,6 +146,7 @@
         // 锚点类型
         let hash = a.hash;
         if (hash) {
+            e.preventDefault();
             let id = hash.substr(1);
             // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
             let $anchor = $(document.getElementById(id));

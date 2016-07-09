@@ -153,14 +153,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // 拦截并重写 a 标签事件
     $('body').on('click', 'a', function (e) {
-        // e.stopPropagation();
-        e.preventDefault();
-
         var a = e.currentTarget;
 
         // load 类型
         var loadUrl = a.getAttribute('load');
         if (loadUrl) {
+            e.preventDefault();
             var container = a.getAttribute('to');
             if (container) {
                 $(container).loadPage({
@@ -179,6 +177,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // 锚点类型
         var hash = a.hash;
         if (hash) {
+            e.preventDefault();
             var id = hash.substr(1);
             // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
             var $anchor = $(document.getElementById(id));
