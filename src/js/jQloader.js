@@ -117,45 +117,10 @@
             _compile_jqInclude(includeDoms[i])
         }
 
-        // 编译 a 标签
-        // const _compile_a = (a) => {
-        //     JQloader(a).set('compiled', true);
-        //
-        //     // load 类型
-        //     let loadUrl = a.getAttribute('load');
-        //     if (loadUrl) {
-        //         a.onclick = (event) => {
-        //             event.preventDefault();
-        //             let container = a.getAttribute('to');
-        //             if (container) {
-        //                 $(container).loadPage({
-        //                     url: loadUrl,
-        //                     title: a.innerHTML
-        //                 })
-        //             } else {
-        //                 $('jq-router').loadPage({
-        //                     url: loadUrl,
-        //                     title: a.innerHTML
-        //                 })
-        //             }
-        //         }
-        //     }
-        //
-        //     // 锚点类型
-        //     /* let href = a.href;
-        //     if (href.indexOf('#')==0) {
-        //         console.log('#');
-        //     } */
-        // }
-        // let links = document.getElementsByTagName('a');
-        // for (var i = 0; i < links.length; i++) {
-        //     if (!JQloader(links[i]).get('compiled')) {
-        //         _compile_a(links[i]);
-        //     }
-        // }
-
     }
 
+
+    // 拦截并重写 a 标签事件
     $('body').on('click','a',(e) => {
         // e.stopPropagation();
         e.preventDefault();
@@ -236,12 +201,6 @@
     window.addEventListener("popstate", () => {
         _loadHitory()
     });
-
-    // 地址栏 hash 改变
-    /* window.addEventListener("hashchange", (e) => {
-        e.preventDefault();
-        console.log(document.location.hash);
-    }); */
 
 
     // 暴露的公共方法 ==============================
