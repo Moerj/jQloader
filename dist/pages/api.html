@@ -5,18 +5,32 @@
     <div id="markdownContainer" style="white-space: pre-line;">
     </div>
 
+    <div id="markdownTree" class="ztree">
+    </div>
+
     <script>
-        $.getScript('https://cdn.bootcss.com/markdown-it/7.0.0/markdown-it.min.js',function () {
+        $.getScript('https://cdn.bootcss.com/markdown-it/7.0.0/markdown-it.min.js', function() {
             $.ajax({
-                url: './readme.md'
-            })
-            .done(function(data) {
-                var md = window.markdownit();
-                var result = md.render(data);
-                $('#markdownContainer').append(result);
-                Prism.highlightAll('markup');
-                Prism.highlightAll('javascript');
-            })
+                    url: './readme.md'
+                })
+                .done(function(data) {
+                    var md = window.markdownit();
+                    var result = md.render(data);
+                    $('#markdownContainer').append(result);
+                    Prism.highlightAll('markup');
+                    Prism.highlightAll('javascript');
+
+                    // ztee生成 markdownTree
+                    $('#markdownTree').ztree_toc({
+                        // is_auto_number: true,
+                        documment_selector: '#markdownContainer',
+                        debug: false,
+                        ztreeStyle: {
+                            width: '290px',
+                            overflow: 'auto',
+                        }
+                    });
+                })
         })
     </script>
 </div>

@@ -79,6 +79,18 @@ $bgColor2:#39eeb8;
         }
     }
 }
-.contanier {
+.container {
     padding: 10px;
+    position: relative;
+    #markdownContainer{
+        float: left;
+    }
+    #markdownTree{
+        float: left;
+        position: relative !important;
+        right: 20px !important;
+        top: 20px !important;
+        left: auto !important;
+        // border: 1px solid #ddd;
+    }
 }

@@ -81,7 +81,8 @@ gulp.task('default', [], function() {
         files: [
             "dist/**/*.css",
             "dist/**/*.js",
-            "dist/**/*.html"
+            "dist/**/*.html",
+            "./index.html"
         ],
 
         // 启动端口
