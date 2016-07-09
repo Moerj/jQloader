@@ -1,0 +1,36 @@
+.ztree {
+    li{
+        .level1{
+            margin: 3px 0;
+        }
+        .center_docu,.bottom_docu,.line {
+            background: transparent !important;
+            width:0 !important;
+        }
+        .root_open,.center_open,.bottom_open {
+            background-image: none !important;
+            background-color: #77baf1 !important;
+            width: 2px !important;
+            margin-right: 5px !important;
+        }
+        .root_close,.center_close,.bottom_close{
+            width: 0 !important;
+        }
+        .root_open{
+            width: 3px !important;
+        }
+        .curSelectedNode{
+            color: #2792ea !important;
+            font-weight: 600;
+            background-color: transparent !important;
+            border: 0 !important;
+        }
+        a{
+            margin: 2px 0;
+            text-decoration: none !important;
+            &:hover{
+                color: #2792ea !important;
+            }
+        }
+    }
+}

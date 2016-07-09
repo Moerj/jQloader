@@ -26,15 +26,36 @@
 
                     // ztee生成 markdownTree
                     $('#markdownTree').ztree_toc({
-                        // is_auto_number: true,
                         documment_selector: '#markdownContainer',
-                        debug: false,
+                        use_head_anchor:true,
+                        // exclude:['h1'],
                         ztreeStyle: {
                             width: '290px',
-                            overflow: 'auto',
+                            overflow: 'auto'
                         }
                     });
                 })
-        })
+        });
+        (function() {
+            if (!window.treeScroll) {
+                var sw = false;
+                var $tree = $('#markdownTree');
+                window.treeScroll = $(window).on('scroll', function() {
+                    if (!sw) {
+                        sw = true;
+                        setTimeout(function () {
+                            if ($(window).scrollTop()>300 ) {
+                                $tree.css('position','fixed')
+
+                            }else{
+                                $tree.css('position','absolute')
+                            }
+                            sw = false;
+                        },300)
+                    }
+                })
+            }
+
+        })()
     </script>
 </div>
