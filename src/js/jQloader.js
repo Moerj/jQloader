@@ -192,7 +192,7 @@
                 sessionStorage.removeItem('jqRouterReload');
             } else {
                 sessionStorage.setItem('jqRouterReload', true);
-                window.location.reload();
+                window.location.replace(window.location.href);
             }
         }
     }
@@ -256,7 +256,7 @@
                         title: OPTS.title,
                         id: $container.attr('id'),
                         url: OPTS.url
-                    }, '', '#' + url);
+                    }, '', '?' + url);
 
                 }
 
