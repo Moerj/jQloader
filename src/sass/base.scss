@@ -76,14 +76,19 @@ $bgColor2: #39eeb8;
 .container {
     padding: 10px;
     position: relative;
+    pre{
+        width: 800px;
+    }
     #markdownContainer {
+        float: left;
         max-width: 870px;
     }
     #markdownTree {
-        position: absolute;
-        right: 20px !important;
-        top: 20px !important;
-        left: auto !important;
+        float: left;
+        position: relative;
+        right: 0px;
+        top: 20px;
+        left: auto;
         // border: 1px solid #ddd;
         @media screen and (max-width: 992px) {
             display: none;

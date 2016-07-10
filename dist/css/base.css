@@ -63,13 +63,17 @@
 .container {
   padding: 10px;
   position: relative; }
+  .container pre {
+    width: 800px; }
   .container #markdownContainer {
+    float: left;
     max-width: 870px; }
   .container #markdownTree {
-    position: absolute;
-    right: 20px !important;
-    top: 20px !important;
-    left: auto !important; }
+    float: left;
+    position: relative;
+    right: 0px;
+    top: 20px;
+    left: auto; }
     @media screen and (max-width: 992px) {
       .container #markdownTree {
         display: none; } }

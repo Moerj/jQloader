@@ -185,7 +185,12 @@ function factor(opts, count, current) {
         var timeout;
 		var treeList = opts._zTree.find('a');
 
-        var highlight_on_scroll = function(e) {
+        var highlight_on_scroll = function() {
+			if (!opts._zTree[0].clientHeight) {
+				// 防止 ajax 刷新页面，多次绑定 scroll event
+				$(opts.scroll_selector).off('scroll');
+				return;
+			}
             if (timeout) {
                 clearTimeout(timeout);
             }
@@ -208,8 +213,10 @@ function factor(opts, count, current) {
 				for (var j = 0; j < otherNode.length; j++) {
 					treeObj.expandNode(otherNode[j], false);
 				}
+
 				treeObj.expandNode(needExpandNode, true);
 				treeObj.expandNode(needExpandNode.getParentNode(), true);
+
             }, opts.refresh_scroll_time);
         };
 
@@ -301,11 +308,8 @@ function factor(opts, count, current) {
             width: '260px',
             overflow: 'auto',
             position: 'fixed',
-            'z-index': 2147483647,
-            border: '0px none',
-            left: '0px',
-            bottom: '0px',
-            // height:'100px'
+            'z-index': 1,
+            border: '0px none'
         },
         ztreeSetting: {
             view: {
