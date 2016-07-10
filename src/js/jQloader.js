@@ -121,7 +121,7 @@
 
 
     // 拦截并重写 a 标签事件
-    $('body').on('click','a',(e) => {
+    $('body').on('click', 'a', (e) => {
         let a = e.currentTarget;
 
         // load 类型
@@ -151,7 +151,9 @@
             // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
             let $anchor = $(document.getElementById(id));
             // 滚动到锚点元素
-            $('html, body').animate({scrollTop: $anchor.offset().top}, 300);
+            $('html, body').animate({
+                scrollTop: $anchor.offset().top
+            }, 300);
         }
 
 
@@ -160,15 +162,16 @@
     // 载入历史记录
     function _loadHitory() {
         let historyData = history.state;
-        let $container;
+        let locationHash = document.location.hash.substr(1);
 
         if (historyData) {
-            let url = historyData.url;
+            let url = historyData.url
+            let $container;
 
             // 指定读取历史页面的容器
             if (historyData.id) {
-                $container = $('#'+historyData.id)
-            }else{
+                $container = $('#' + historyData.id)
+            } else {
                 $container = $('jq-router')
             }
 
@@ -182,17 +185,35 @@
                 progress: false,
                 title: historyData.title
             });
-        } else {
-            // 没有 url 参数，代表当前回到无路由页面
-            // 因为用清空或者重请求等方法很难判断逻辑
-            // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
-            let needReload = sessionStorage.getItem('jqRouterReload');
-            if (needReload) {
-                sessionStorage.removeItem('jqRouterReload');
-            } else {
-                sessionStorage.setItem('jqRouterReload', true);
-                window.location.replace(window.location.href);
+
+            return;
+        }
+
+        if (locationHash) {
+            let $container = $('jq-router');
+
+            if (!$container.length) {
+                return;
             }
+
+            $container.loadPage({
+                url: locationHash,
+                history: false,
+                progress: true
+            });
+
+            return;
+        }
+
+        // 没有 url 参数，代表当前回到无路由页面
+        // 因为用清空或者重请求等方法很难判断逻辑
+        // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
+        let needReload = sessionStorage.getItem('jqRouterReload');
+        if (needReload) {
+            sessionStorage.removeItem('jqRouterReload');
+        } else {
+            sessionStorage.setItem('jqRouterReload', true);
+            window.location.replace(window.location.href);
         }
     }
 
@@ -206,7 +227,7 @@
     // loadPage 加载完后的回调组，用于指令触发load后的回调
     $.fn.loadFinish = function(call_back) {
         let container = $(this);
-        JQloader(container[0]).push('loadPageCallBacks',call_back)
+        JQloader(container[0]).push('loadPageCallBacks', call_back)
         return container
     }
 
