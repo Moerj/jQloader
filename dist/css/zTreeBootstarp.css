@@ -1,5 +1,6 @@
 .ztree li .level1 {
-  margin: 3px 0; }
+  margin: 3px 0;
+  }
 
 .ztree li .center_docu, .ztree li .bottom_docu, .ztree li .line {
   background: transparent !important;
