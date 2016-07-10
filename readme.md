@@ -1,4 +1,4 @@
-# jQloader v0.0.8
+# jQloader v0.0.9
 
 ## Home
 https://moerj.github.io/jQloader
@@ -46,15 +46,16 @@ jq-router 指令仅仅是用来读取浏览器历史数据和路由页面的。
   
 
 ### a 标签
-- router  代替 href 属性，设置请求的url地址
-- to  设置请求页面存放容器，不设置时默认存放在 jq-router 容器  
+- load  代替 href 属性，设置请求的url地址
+- to  设置请求页面存放容器，不设置时默认存放在 jq-router 容器
+- 锚点功能依然保留，但点击锚点 a 标签不会改变地址栏
 ```html
 <!-- 将hellow页面加载到id为container的容器中 -->
-<a router="./hellow.html" to="#container"></a>
+<a load="./hellow.html" to="#container"></a>
 ```  
   
 ## 公共方法  
-
+  
 ### loadPage 加载页面
 ajax 方式加载页面到容器中
 ```javascript
@@ -65,7 +66,7 @@ $('div').loadPage({
     progress: true,     //是否加载时显示进度条，默认 true
     cache: true,        //是否开启缓存，默认 true
     async: true,        //是否异步，默认 true
-    title: 'string'        //页面名称，默认 null
+    title: 'string'     //页面名称，默认 null
 })
 ```
   

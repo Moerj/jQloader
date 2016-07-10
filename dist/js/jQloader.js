@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader v0.0.8
+ * jQloader v0.0.9
  * @license: MIT
  * Designed and built by Moer
  * github   https://github.com/Moerj/jQloader

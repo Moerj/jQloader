@@ -82,7 +82,8 @@ gulp.task('default', [], function() {
             "dist/**/*.css",
             "dist/**/*.js",
             "dist/**/*.html",
-            "./index.html"
+            "./index.html",
+            "./readme.md"
         ],
 
         // 启动端口
