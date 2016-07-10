@@ -31,10 +31,10 @@ ajax 方式请求一个页面，并放入在该容器中
 ```
   
 ### jq-router 路由容器
-用于存放 ajax 页面的路由容器，整个浏览器窗口只能有一个jq-router，多余的将会被忽略。  
+整个浏览器窗口只能有一个jq-router，多余的将会被忽略。  
   
 __用途：__  
-呈现ajax页面的容器，主要用于首次载入页面用于显示地址栏#xxx.html部分的数据，如果页面上没有路由容器，则首次加载忽略路由地址。
+呈现ajax页面的容器，用于显示地址栏#xxx.html部分的数据，如果页面上没有路由容器，则首次加载忽略路由地址。
 
 ```html
 <!-- 把 loadPage 方法请求的数据塞入这里 -->
@@ -46,9 +46,10 @@ jq-router 指令仅仅是用来读取浏览器历史数据和路由页面的。
   
 
 ### a 标签
-- load  代替 href 属性，设置请求的url地址
-- to  设置请求页面存放容器，不设置时默认存放在 jq-router 容器
-- 锚点功能依然保留，但点击锚点 a 标签不会改变地址栏
+可以直接使用 a 标签来请求一个页面，当你使用了 load 属性时，会屏蔽 herf 属性。  
+a 标签的锚点功能依然保留，但点击后标签不会改变地址栏，因为#号已被路由功能占用。_to be optimized_
+- load  点击后请求的url地址
+- to  请求到的页面存放容器，不设置时默认存放在 jq-router 容器
 ```html
 <!-- 将hellow页面加载到id为container的容器中 -->
 <a load="./hellow.html" to="#container"></a>
@@ -66,7 +67,7 @@ $('div').loadPage({
     progress: true,     //是否加载时显示进度条，默认 true
     cache: true,        //是否开启缓存，默认 true
     async: true,        //是否异步，默认 true
-    title: 'string'     //页面名称，默认 null
+    title: 'string'     //浏览器tab页名称，默认 null
 })
 ```
   
