@@ -46,6 +46,11 @@
             window.treeScroll = $(window).on('scroll', function() {
                 if (!sw) {
                     sw = true;
+                    var $apiCon = $('#apiContainer');
+                    var top;
+                    if ($apiCon.length) {
+                        top = $apiCon.offset().top;
+                    }
                     setTimeout(function () {
                         if ($(window).scrollTop()>300 ) {
                             $tree.css({
@@ -56,7 +61,7 @@
                         }else{
                             $tree.css({
                                 position:'absolute',
-                                top: $('#apiContainer').offset().top
+                                top: top
                             })
                         }
                         sw = false;
