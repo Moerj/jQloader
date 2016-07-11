@@ -32,6 +32,7 @@
 
 <script>
     // 设置点击菜单的激活状态
+    // 其实就是在路由容器加载完成后，对比header a标签上的 load 属性是否和地址栏的hash 路由相同，然后设置激活状态
     $('jq-router').loadFinish(function() {
         var links = $('#header li a');
         var hash = window.location.hash.split('#')[1];
