@@ -36,12 +36,14 @@
                     });
                 })
         });
-        (function() {
+        setTimeout(function () {
+
             if (window.treeScroll) {
                 window.treeScroll.off('scroll');
             }
             var $tree = $('#markdownTree');
             var sw = false;
+            var top = $('.container').offset().top;
             window.treeScroll = $(window).on('scroll', function() {
                 if (!sw) {
                     sw = true;
@@ -55,14 +57,14 @@
                         }else{
                             $tree.css({
                                 position:'absolute',
-                                top: $('#markdownContainer').offset().top
+                                top: top
                             })
                         }
                         sw = false;
                     },300)
                 }
             })
+        })
 
-        })()
     </script>
 </div>

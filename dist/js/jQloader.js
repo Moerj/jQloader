@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.0.9
+ * jQloader  v0.1.0
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -292,19 +292,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             success: function success(data) {
 
                 // 记录浏览器历史
-                if (OPTS.history && $container[0].localName === 'jq-router') {
+                if (OPTS.history) {
                     // 处理 url 格式，浏览器地址栏去掉./开头
                     var url = OPTS.url;
                     if (OPTS.url.substring(0, 2) === './') {
                         url = OPTS.url.substring(2);
                     }
 
-                    // 浏览器地址栏操作
-                    history.pushState({
-                        title: OPTS.title,
-                        id: $container.attr('id'),
-                        url: OPTS.url
-                    }, '', '#' + url);
+                    if ($container[0].localName === 'jq-router') {
+                        // 浏览器地址栏操作
+                        history.pushState({
+                            title: OPTS.title,
+                            url: OPTS.url
+                        }, '', '#' + url);
+                    } else {
+                        var hashList = window.location.hash.split("#");
+                        var routerUrl = hashList[1];
+                        history.pushState({
+                            title: OPTS.title,
+                            id: $container.attr('id'),
+                            url: OPTS.url
+                        }, '', '#' + routerUrl + '#' + OPTS.url);
+                    }
                 }
 
                 // 修改页面 title
