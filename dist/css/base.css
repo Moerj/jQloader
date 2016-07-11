@@ -9,6 +9,8 @@
   color: #fff;
   text-align: center;
   padding: 30px 0;
+  position: relative;
+  z-index: 1;
   background: -webkit-linear-gradient(left, #78baf2, #39eeb8);
   background: linear-gradient(to right, #78baf2, #39eeb8); }
   .banner h1 {
@@ -60,18 +62,17 @@
   to {
     background-color: #39eeb8; } }
 
-.api {
-  width: 100%;
-  position: relative; }
-  .api pre {
-    width: 800px; }
-  .api #markdownContainer {
-    max-width: 870px; }
-  .api #markdownTree {
-    position: absolute;
-    right: 0px;
-    top: 20px;
-    left: auto; }
-    @media screen and (max-width: 992px) {
-      .api #markdownTree {
-        display: none; } }
+.container #markdownContainer {
+  max-width: 870px; }
+
+.container #markdownTree {
+  position: absolute;
+  right: 0px;
+  top: 20px;
+  left: auto; }
+  @media screen and (max-width: 992px) {
+    .container #markdownTree {
+      display: none; } }
+
+.container pre {
+  width: 800px; }
