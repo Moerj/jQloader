@@ -1,6 +1,6 @@
 <jq-include src="dist/pages/banner.html" id="bannerInclude"></jq-include>
 
-<div class="container">
+<div class="container" id="apiContainer">
 
     <div id="markdownContainer" style="white-space: pre-line;">
     </div>
@@ -43,7 +43,6 @@
             }
             var $tree = $('#markdownTree');
             var sw = false;
-            var top = $('.container').offset().top;
             window.treeScroll = $(window).on('scroll', function() {
                 if (!sw) {
                     sw = true;
@@ -57,7 +56,7 @@
                         }else{
                             $tree.css({
                                 position:'absolute',
-                                top: top
+                                top: $('#apiContainer').offset().top
                             })
                         }
                         sw = false;

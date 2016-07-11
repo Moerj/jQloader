@@ -161,17 +161,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (loadUrl) {
             e.preventDefault();
             var container = a.getAttribute('to');
+            var $container = void 0;
+
             if (container) {
-                $(container).loadPage({
-                    url: loadUrl,
-                    title: a.innerHTML
-                });
+                $container = $(container);
             } else {
-                $('jq-router').loadPage({
-                    url: loadUrl,
-                    title: a.innerHTML
-                });
+                $container = $('jq-router');
             }
+
+            $container.loadPage({
+                url: loadUrl,
+                title: a.title
+            });
+
             return false;
         }
 

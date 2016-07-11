@@ -73,6 +73,3 @@
   @media screen and (max-width: 992px) {
     .container #markdownTree {
       display: none; } }
-
-.container pre {
-  width: 800px; }

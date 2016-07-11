@@ -130,17 +130,19 @@
         if (loadUrl) {
             e.preventDefault();
             let container = a.getAttribute('to');
+            let $container;
+
             if (container) {
-                $(container).loadPage({
-                    url: loadUrl,
-                    title: a.innerHTML
-                })
+                $container = $(container)
             } else {
-                $('jq-router').loadPage({
-                    url: loadUrl,
-                    title: a.innerHTML
-                })
+                $container = $('jq-router')
             }
+
+            $container.loadPage({
+                url: loadUrl,
+                title: a.title
+            })
+
             return false;
         }
 

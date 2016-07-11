@@ -4,7 +4,7 @@
 https://moerj.github.io/jQloader
   
   
-## 功能
+## 特性
 - 指令模板，html 页面直接引入其他页面
 - 动态加载，ajax 动态加载html页面
 - 历史记录，ajax 页面会存入浏览器历史记录
@@ -21,16 +21,18 @@ https://moerj.github.io/jQloader
 ```
   
   
-## 指令库
+## 指令
   
-### jq-include 引入页面
+### jq-include
+引入页面  
 ajax 方式请求一个页面，并放入在该容器中
 ```html
 <!-- somePage页面将会以 ajax 方式加进来 -->
 <jq-include src="./somePage.html"></jq-include>
 ```
   
-### jq-router 路由容器
+### jq-router
+路由容器  
 整个浏览器窗口只能有一个jq-router，多余的将会被忽略。  
   
 __用途：__  
@@ -45,19 +47,21 @@ __提示：__
 jq-router 指令仅仅是用来读取浏览器历史数据和路由页面的。  
   
 
-### a 标签
+### a
 可以直接使用 a 标签来请求一个页面，当你使用了 load 属性时，会屏蔽 herf 属性。  
 a 标签的锚点功能依然保留，但点击后标签不会改变地址栏，因为#号已被路由功能占用。_to be optimized_
 - load  点击后请求的url地址
 - to  请求到的页面存放容器，不设置时默认存放在 jq-router 容器
+- title  设置页面名称
 ```html
-<!-- 将hellow页面加载到id为container的容器中 -->
-<a load="./hellow.html" to="#container"></a>
+<!-- 将hellow页面加载到id为container的容器中，页面名称显示为hellow jQloader -->
+<a load="./hellow.html" to="#container" title="hellow jQloader"></a>
 ```  
   
-## 公共方法  
+## 接口  
   
-### loadPage 加载页面
+### loadPage
+加载页面  
 ajax 方式加载页面到容器中
 ```javascript
 // 在一个 div 容器中加载页面
@@ -71,7 +75,8 @@ $('div').loadPage({
 })
 ```
   
-### loadFinish 加载页面后的回调
+### loadFinish
+加载页面后的回调  
 目标容器使用 loadPage 或者指令方式加载完数据后的回调
 ```javascript
 $('div').loadFinish(function () {
@@ -79,8 +84,9 @@ $('div').loadFinish(function () {
 })
 ```
   
-### $.progressBar 操作进度条
-顶部的进度条，页面加载时会自动执行。(注意：除非你有其他用途，通常进度条并不需要你去手动操作)
+### progressBar
+加载进度条  
+loading 状态时顶部的进度条，页面加载时会自动执行。(注意：除非你有其他用途，通常进度条并不需要你去手动操作)
 ```javascript
 $.progressBar
 .star()             //进度条开始
@@ -91,9 +97,10 @@ $.progressBar
 ```
   
 
-## 其他
+## other
 
-### 支持 ajax 载入页面的 js 运行
+### ajxa js
+支持 ajax 载入页面的 js 运行
 但是由于安全限制以及可能出现的 js 重复运行的问题，建议将所有 js 写在主页面，事件以委托方式绑定。
 若你还是想在 ajax 页面中写 js， 那请确保这部分 js 其没有对主页面和全局对象有事件绑定，不然很可能再次 ajax 此页面时会重复绑定事件。
 
