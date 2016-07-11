@@ -1,48 +1,48 @@
 <nav class="navbar navbar-default navbar-static-top" id="headBar">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" load="dist/pages/welcome.html" id="home" >jQloader</a>
-    </div>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" load="dist/pages/welcome.html" id="home">jQloader</a>
+        </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="header">
-      <ul class="nav navbar-nav">
-        <li><a load="dist/pages/getting-start.html" id="start">Start</a></li>
-        <li><a load="dist/pages/demo.html" id="demo">DEMO</a></li>
-        <li><a load="dist/pages/api.html" id="api">API</a></li>
-        <li><a download="jQloader.js" href="https://raw.githubusercontent.com/Moerj/jQloader/gh-pages/dist/js/jQloader.js" id="download">Download</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/Moerj/jQloader" target="_blank"><i class="fa fa-github"></i> Github</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="header">
+            <ul class="nav navbar-nav">
+                <li><a load="dist/pages/getting-start.html" id="start">Start</a></li>
+                <li><a load="dist/pages/demo.html" id="demo">DEMO</a></li>
+                <li><a load="dist/pages/api.html" id="api">API</a></li>
+                <li><a download="jQloader.js" href="https://raw.githubusercontent.com/Moerj/jQloader/gh-pages/dist/js/jQloader.js" id="download">Download</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="https://github.com/Moerj/jQloader" target="_blank"><i class="fa fa-github"></i> Github</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
 </nav>
 
 
 
 <script>
-(function () {
-
     // 设置点击菜单的激活状态
-    var $lis = $('#header li');
-    $('#headBar a').click(function () {
-        var $a = $(this);
-        if ($a.attr('load')) {
-            $lis.removeClass('active');
-            $a.parent().addClass('active');
+    $('jq-router').loadFinish(function() {
+        var links = $('#header li a');
+        var hash = window.location.hash.split('#')[1];
+        var $link;
+        for (var i = 0; i < links.length; i++) {
+            $link = $(links[i]);
+            if ($link.attr('load') && $link.attr('load').indexOf(hash) >= 0) {
+                $link.parent().addClass('active')
+            } else {
+                $link.parent().removeClass('active')
+            }
         }
     })
-
-    $('#home').click(function () {
-        $lis.removeClass('active')
-    })
-})()
 </script>
