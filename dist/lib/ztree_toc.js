@@ -331,13 +331,13 @@ function factor(opts, count, current) {
             },
             callback: {
                 beforeClick: function(treeId, treeNode) {
-					// console.log(treeNode);
 					if (treeNode.isParent) {
 						var treeObj = $.fn.zTree.getZTreeObj(treeId);
 						treeObj.expandNode(treeNode, true, true, true);
 					}
+                    // 点击 tree ，内容标题高亮一次
                     if ($.fn.ztree_toc.defaults.is_highlight_selected_line == true) {
-                        var $hTag = $(treeNode.url)
+                        var $hTag = $(document.getElementById(treeNode.url.substr(1)))
                         var color = $hTag.css('color')
                         $hTag.css('color', '#4786c9').fadeOut("slow", function() {
                             // Animation complete.
