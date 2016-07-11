@@ -60,20 +60,18 @@
   to {
     background-color: #39eeb8; } }
 
-.container {
-  padding: 10px;
+.api {
+  width: 100%;
   position: relative; }
-  .container pre {
+  .api pre {
     width: 800px; }
-  .container #markdownContainer {
-    float: left;
+  .api #markdownContainer {
     max-width: 870px; }
-  .container #markdownTree {
-    float: left;
-    position: relative;
+  .api #markdownTree {
+    position: absolute;
     right: 0px;
     top: 20px;
     left: auto; }
     @media screen and (max-width: 992px) {
-      .container #markdownTree {
+      .api #markdownTree {
         display: none; } }

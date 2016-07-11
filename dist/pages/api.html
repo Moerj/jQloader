@@ -1,6 +1,6 @@
 <jq-include src="dist/pages/banner.html" id="bannerInclude"></jq-include>
 
-<div class="container">
+<div class="api">
 
     <div id="markdownContainer" style="white-space: pre-line;">
     </div>
@@ -49,13 +49,13 @@
                         if ($(window).scrollTop()>300 ) {
                             $tree.css({
                                 position: 'fixed',
-                                marginRight: '75px'
+                                // marginRight: '75px'
                             })
 
                         }else{
                             $tree.css({
-                                position:'relative',
-                                marginRight: 0
+                                position:'absolute',
+                                // marginRight: 0
                             })
                         }
                         sw = false;
