@@ -1,37 +1,53 @@
 .ztree {
-    li{
-        .level1{
+    *{
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+    }
+    li {
+        position: relative;
+        .level1 {
             margin: 3px 0;
         }
-        .center_docu,.bottom_docu,.line {
-            background: transparent !important;
-            width:0 !important;
+        .switch{
+            position: absolute;
+            top: 0;
+            left: 0;
         }
-        .root_open,.root_close{
+        .bottom_docu,
+        .center_docu,
+        .line {
+            background: transparent !important;
+            width: 0 !important;
+        }
+        .root_close,
+        .root_open {
             display: none;
         }
-        .center_open,.bottom_open {
+        .bottom_open,
+        .center_open {
             background-image: none !important;
             background-color: #77baf1 !important;
             width: 2px !important;
             margin-right: 5px !important;
         }
-        .center_close,.bottom_close{
+        .bottom_close,
+        .center_close {
             width: 0 !important;
         }
-        .root_open{
+        .root_open {
             width: 3px !important;
         }
-        .curSelectedNode{
+        .curSelectedNode {
             color: #2792ea !important;
-            font-weight: 600;
             background-color: transparent !important;
             border: 0 !important;
         }
-        a{
-            margin: 2px 0;
+        a {
+            padding: 0 20px;
+            margin: 3px 0;
             text-decoration: none !important;
-            &:hover{
+            &:hover {
                 color: #2792ea !important;
             }
         }
