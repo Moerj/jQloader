@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.1.0
+ * jQloader  v0.1.1
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -162,6 +162,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             e.preventDefault();
             var container = a.getAttribute('to');
             var $container = void 0;
+            var isStrict = false;
 
             if (container) {
                 $container = $(container);
@@ -169,9 +170,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 $container = $('jq-router');
             }
 
+            // 是否严格模式
+            if (a.getAttribute('strict') != null) {
+                isStrict = true;
+            }
+
             $container.loadPage({
                 url: loadUrl,
-                title: a.title
+                title: a.title,
+                strict: isStrict
             });
 
             return false;
@@ -214,7 +221,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             $container.loadPage({
                 url: url,
                 history: false,
-                progress: false,
+                progress: true,
                 title: historyData.title
             });
 
@@ -276,13 +283,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             progress: true,
             cache: true,
             async: true,
-            title: null
+            title: null,
+            // strict: true, 开启严格模式，
+            // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
+            // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
+            strict: false
         };
 
         OPTS = $.extend({}, DEFAULT, OPTS);
 
         // 开启 loading 进度条
-        if (OPTS.progress) $.progressBar.start();
+        if (OPTS.progress && !OPTS.strict) $.progressBar.start();
 
         // 请求页面
         $.ajax({
@@ -292,6 +303,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             async: OPTS.async,
             timeout: 10000,
             success: function success(data) {
+
+                // 严格模式强制重载有 js 的 ajax 页面
+                if (OPTS.strict && data.indexOf('<script') >= 0) {
+                    var host = window.location.host;
+                    window.location.reload(host + '/#' + OPTS.url);
+                }
 
                 // 记录浏览器历史
                 if (OPTS.history) {
@@ -357,7 +374,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             },
             complete: function complete() {
                 // 进度条结束
-                if (OPTS.progress) $.progressBar.finish();
+                if (OPTS.progress && !OPTS.strict) $.progressBar.finish();
                 if (call_back) call_back();
             }
         });

@@ -1,4 +1,4 @@
-# jQloader v0.1.0
+# jQloader v0.1.1
 
 ## Home
 https://moerj.github.io/jQloader
@@ -53,10 +53,12 @@ a 标签的锚点功能依然保留，但点击后标签不会改变地址栏，
 - load  点击后请求的url地址
 - to  请求到的页面存放容器，不设置时默认存放在 jq-router 容器
 - title  设置页面名称
+- strict  此参数会开启严格加载模式
 ```html
 <!-- 将hellow页面加载到id为container的容器中，页面名称显示为hellow jQloader -->
 <a load="./hellow.html" to="#container" title="hellow jQloader"></a>
 ```  
+
   
 ## 接口  
   
@@ -71,7 +73,8 @@ $('div').loadPage({
     progress: true,     //是否加载时显示进度条，默认 true
     cache: true,        //是否开启缓存，默认 true
     async: true,        //是否异步，默认 true
-    title: 'string'     //浏览器tab页名称，默认 null
+    title: 'string',    //浏览器tab页名称，默认 null
+    strict: false       //是否严格模式加载 ajxa，默认 false
 })
 ```
   
@@ -99,10 +102,13 @@ $.progressBar
 
 ## other
 
-### ajxa js
-支持 ajax 载入页面的 js 运行
-但是由于安全限制以及可能出现的 js 重复运行的问题，建议将所有 js 写在主页面，事件以委托方式绑定。
-若你还是想在 ajax 页面中写 js， 那请确保这部分 js 其没有对主页面和全局对象有事件绑定，不然很可能再次 ajax 此页面时会重复绑定事件。
-
+### strict
+使用严格模式进行 ajxa 请求，此时请求会完全重载整个页面，防止重复js运行。
+虽然支持 ajax 载入页面的 js 运行，但是由于安全限制以及可能出现的 js 重复运行的问题，建议将所有 js 写在主页面，事件以委托方式绑定。
+若你还是想在 ajax 页面中写 js， 有2种办法确保安全：
+1. 请确保这部分 js 没有对主页面和全局对象有事件绑定，不然很可能再次打开此页面时会重复绑定事件。
+2. 使用 strict 模式请求页面，这样可以保证是完全重载。
+  
+  
 ## TODO
-- 想办法销毁上一个 ajax 页面的 js，以免出现js 重复运行的问题。
+- 优化 loadPage 方法
