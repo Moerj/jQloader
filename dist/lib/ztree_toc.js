@@ -197,10 +197,12 @@ function factor(opts, count, current) {
             timeout = setTimeout(function() {
 				var treeObj = $.fn.zTree.getZTreeObj(opts._zTree.attr('id'));
 				var needExpandNode;
-				var otherNode = treeObj.getNodes()[0].children;;
+				var otherNode = treeObj.getNodes()[0].children;
 
                 for (var i = 0; i < opts._header_offsets.length; i++) {
-					if (!($(window).scrollTop()>$(opts._header_offsets[i]).offset().top)) {
+                    var h = $(opts._header_offsets[i]);
+					if (!($(window).scrollTop()>h.offset().top)) {
+                        // tree list set
 						treeList.removeClass('curSelectedNode');
 						treeList.eq(i).addClass('curSelectedNode');
 						var tid = treeList.eq(i).parent().attr('id');
@@ -335,9 +337,11 @@ function factor(opts, count, current) {
 						treeObj.expandNode(treeNode, true, true, true);
 					}
                     if ($.fn.ztree_toc.defaults.is_highlight_selected_line == true) {
-                        $('#' + treeNode.id).css('color', 'red').fadeOut("slow", function() {
+                        var $hTag = $(treeNode.url)
+                        var color = $hTag.css('color')
+                        $hTag.css('color', '#4786c9').fadeOut("slow", function() {
                             // Animation complete.
-                            $(this).show().css('color', 'black');
+                            $(this).show().css('color', color);
                         });
                     }
                 },
