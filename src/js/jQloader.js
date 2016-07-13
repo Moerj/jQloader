@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.1
+ * jQloader  v0.1.2
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -140,7 +140,7 @@
             }
 
             // 是否严格模式
-            if (a.getAttribute('strict')!=null) {
+            if (a.getAttribute('strict') != null) {
                 isStrict = true;
             }
 
@@ -265,6 +265,92 @@
         OPTS = $.extend({}, DEFAULT, OPTS);
 
 
+        const _todo = (OPTS, data) => {
+            let _this = {
+                strict: () => {
+                    // 严格模式强制重载有 js 的 ajax 页面
+                    if (OPTS.strict && data.indexOf('<script') >= 0) {
+                        let host = window.location.host;
+                        window.location.reload(host + '/#' + OPTS.url);
+                    }
+                    return _this;
+                },
+                history: () => {
+                    // 记录浏览器历史
+                    if (OPTS.history) {
+                        // 处理 url 格式，浏览器地址栏去掉./开头
+                        let url = OPTS.url;
+                        if (OPTS.url.substring(0, 2) === './') {
+                            url = OPTS.url.substring(2)
+                        }
+
+                        if ($container[0].localName === 'jq-router') {
+                            // 浏览器地址栏操作
+                            history.pushState({
+                                title: OPTS.title,
+                                url: OPTS.url
+                            }, '', '#' + url);
+                        } else {
+                            let hashList = window.location.hash.split("#");
+                            let routerUrl = hashList[1];
+                            history.pushState({
+                                title: OPTS.title,
+                                id: $container.attr('id'),
+                                url: OPTS.url
+                            }, '', '#' + routerUrl + '#' + OPTS.url);
+                        }
+                    }
+                    return _this;
+                },
+                title: () => {
+                    // 修改页面 title
+                    if (OPTS.title) {
+                        window.document.title = OPTS.title;
+                    }
+                    return _this;
+                },
+                render: () => {
+                    // 写入页面
+                    $container.html(data);
+                    return _this;
+                },
+                zepto: () => {
+                    // 解决Zepto ajxa 请求到的页面 script 标签执行问题
+                    if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
+                        let script = $container.find('script');
+                        for (let i = 0; i < script.length; i++) {
+                            let src = script[i].src;
+                            if (src) {
+                                // Zepto不会运行外联script
+                                $.get(src)
+                            } else {
+                                // Zepto会执行两次页面的内联script
+                                $(script[i]).remove()
+                            }
+                        }
+                    }
+                    return _this;
+                },
+                compile: () => {
+                    // 编译新页面上的指令
+                    _compile();
+                    return _this;
+                },
+                callbacks: () => {
+                    // 运行容器上的回调方法组
+                    let callBacks = JQloader($container[0]).get('loadPageCallBacks');
+                    if (callBacks) {
+                        for (var i = 0; i < callBacks.length; i++) {
+                            callBacks[i]();
+                        }
+                    }
+                    return _this;
+                }
+
+            }
+            return _this;
+        }
+
         // 开启 loading 进度条
         if (OPTS.progress && !OPTS.strict) $.progressBar.start();
 
@@ -277,71 +363,15 @@
             timeout: 10000,
             success: (data) => {
 
-                // 严格模式强制重载有 js 的 ajax 页面
-                if (OPTS.strict && data.indexOf('<script')>=0) {
-                    let host = window.location.host;
-                    window.location.reload(host + '/#' +OPTS.url);
-                }
+                _todo(OPTS, data)
+                    .strict()
+                    .history()
+                    .title()
+                    .render()
+                    .zepto()
+                    .compile()
+                    .callbacks();
 
-                // 记录浏览器历史
-                if (OPTS.history) {
-                    // 处理 url 格式，浏览器地址栏去掉./开头
-                    let url = OPTS.url;
-                    if (OPTS.url.substring(0, 2) === './') {
-                        url = OPTS.url.substring(2)
-                    }
-
-                    if ($container[0].localName === 'jq-router') {
-                        // 浏览器地址栏操作
-                        history.pushState({
-                            title: OPTS.title,
-                            url: OPTS.url
-                        }, '', '#' + url);
-                    }else{
-                        let hashList = window.location.hash.split("#");
-                        let routerUrl = hashList[1];
-                        history.pushState({
-                            title: OPTS.title,
-                            id: $container.attr('id'),
-                            url: OPTS.url
-                        }, '', '#' + routerUrl + '#' + OPTS.url );
-                    }
-
-                }
-
-                // 修改页面 title
-                if (OPTS.title) {
-                    window.document.title = OPTS.title;
-                }
-
-                // 写入页面
-                $container.html(data);
-
-                // 解决Zepto ajxa 请求到的页面 script 标签执行问题
-                if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
-                    let script = $container.find('script');
-                    for (let i = 0; i < script.length; i++) {
-                        let src = script[i].src;
-                        if (src) {
-                            // Zepto不会运行外联script
-                            $.get(src)
-                        } else {
-                            // Zepto会执行两次页面的内联script
-                            $(script[i]).remove()
-                        }
-                    }
-                }
-
-                // 编译新页面上的指令
-                _compile();
-
-                // 运行容器上的回调方法组
-                let callBacks = JQloader($container[0]).get('loadPageCallBacks');
-                if (callBacks) {
-                    for (var i = 0; i < callBacks.length; i++) {
-                        callBacks[i]();
-                    }
-                }
             },
             error: () => {
                 console.warn('页面载入失败！');
@@ -349,6 +379,8 @@
             complete: () => {
                 // 进度条结束
                 if (OPTS.progress && !OPTS.strict) $.progressBar.finish();
+
+                // 本次 ajax 的回调
                 if (call_back) call_back();
             }
         })
