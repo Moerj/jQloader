@@ -67,9 +67,7 @@
 
 .container #markdownTree {
   position: absolute;
-  right: 0px;
-  top: 20px;
-  left: auto; }
+  top: 20px; }
   @media screen and (max-width: 992px) {
     .container #markdownTree {
       display: none; } }

@@ -47,6 +47,7 @@
                 if (!sw) {
                     sw = true;
                     var $apiCon = $('#apiContainer');
+                    var left = ($(window).width()-$apiCon.width())/2+870;
                     var top;
                     if ($apiCon.length) {
                         top = $apiCon.offset().top;
@@ -55,13 +56,15 @@
                         if ($(window).scrollTop()>300 ) {
                             $tree.css({
                                 position: 'fixed',
-                                top: 0
+                                top: 0,
+                                left: left
                             })
 
                         }else{
                             $tree.css({
                                 position:'absolute',
-                                top: top
+                                top: top,
+                                left: left
                             })
                         }
                         sw = false;

@@ -80,9 +80,7 @@ $bgColor2: #39eeb8;
     }
     #markdownTree {
         position: absolute;
-        right: 0px;
         top: 20px;
-        left: auto;
         @media screen and (max-width: 992px) {
             display: none;
         }
