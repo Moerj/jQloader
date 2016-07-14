@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.2
+ * jQloader  v0.1.3
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -122,52 +122,56 @@
 
 
     // 拦截并重写 a 标签事件
-    $('body').on('click', 'a', (e) => {
-        let a = e.currentTarget;
+    const _reWriteLinks = () => {
+        $('body').on('click','a',(e) => {
+            let a = e.currentTarget;
 
-        // load 类型
-        let loadUrl = a.getAttribute('load');
-        if (loadUrl) {
-            e.preventDefault();
-            let container = a.getAttribute('to');
-            let $container;
-            let isStrict = false;
+            // load 类型
+            let loadUrl = a.getAttribute('load');
+            if (loadUrl) {
+                e.preventDefault();
+                let container = a.getAttribute('to');
+                let $container;
+                let isStrict = false;
 
-            if (container) {
-                $container = $(container)
-            } else {
-                $container = $('jq-router')
+                if (container) {
+                    $container = $(container)
+                } else {
+                    $container = $('jq-router')
+                }
+
+                // 是否严格模式
+                if (a.getAttribute('strict') != null) {
+                    isStrict = true;
+                }
+
+                $container.loadPage({
+                    url: loadUrl,
+                    title: a.title,
+                    strict: isStrict
+                })
+
+                return;
             }
 
-            // 是否严格模式
-            if (a.getAttribute('strict') != null) {
-                isStrict = true;
+            // 锚点类型
+            let hash = a.hash;
+            if (hash) {
+                e.preventDefault();
+                let id = hash.substr(1);
+                // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
+                let $anchor = $(document.getElementById(id));
+                // 滚动到锚点元素
+                $('html, body').animate({
+                    scrollTop: $anchor.offset().top
+                }, 300);
+
+                return;
             }
 
-            $container.loadPage({
-                url: loadUrl,
-                title: a.title,
-                strict: isStrict
-            })
+        })
 
-            return false;
-        }
-
-        // 锚点类型
-        let hash = a.hash;
-        if (hash) {
-            e.preventDefault();
-            let id = hash.substr(1);
-            // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
-            let $anchor = $(document.getElementById(id));
-            // 滚动到锚点元素
-            $('html, body').animate({
-                scrollTop: $anchor.offset().top
-            }, 300);
-        }
-
-
-    })
+    }
 
     // 载入历史记录
     function _loadHitory() {
@@ -396,6 +400,9 @@
 
 
     $(() => { // jQloader所在页面/首页初始化 dom 完毕
+
+        // 重写 a 标签事件
+        _reWriteLinks();
 
         // 执行一次编译
         _compile();
