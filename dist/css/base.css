@@ -62,12 +62,14 @@
   to {
     background-color: #39eeb8; } }
 
-.container #markdownContainer {
-  max-width: 870px; }
-
-.container #markdownTree {
-  position: absolute;
-  top: 20px; }
-  @media screen and (max-width: 992px) {
-    .container #markdownTree {
-      display: none; } }
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px; }
+  .container #markdownContainer {
+    max-width: 870px; }
+  .container #markdownTree {
+    position: absolute;
+    top: 20px; }
+    @media screen and (max-width: 992px) {
+      .container #markdownTree {
+        display: none; } }

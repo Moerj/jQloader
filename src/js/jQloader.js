@@ -328,7 +328,7 @@
 
         OPTS = $.extend({}, DEFAULT, OPTS);
 
-
+        // ajax 请求完成后的一些列链式流程
         const _todo = (OPTS, data) => {
             let _this = {
                 strict: () => {
@@ -468,17 +468,15 @@
     }
 
 
-    // 进度条实例
-    if (!$.progressBar) {
-        $.progressBar = new ProgressBar();
-    }
 
-    //  loading 实例
-    if (!$.loadingLock) {
-        $.loadingLock = new LoadingLock();
-    }
 
     $(() => { // jQloader所在页面/首页初始化 dom 完毕
+
+        // 创建并暴露 进度条
+        $.progressBar = new ProgressBar();
+
+        // 创建并暴露 loading蒙层
+        $.loadingLock = new LoadingLock();
 
         // 重写 a 标签事件
         _reWriteLinks();
