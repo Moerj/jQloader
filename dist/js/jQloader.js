@@ -210,7 +210,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     // 拦截并重写 a 标签事件
-    var _reWriteLinks = function _reWriteLinks() {
+    function _reWriteLinks() {
         $('body').on('click', 'a', function (e) {
             var a = e.currentTarget;
 
@@ -257,7 +257,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return;
             }
         });
-    };
+    }
 
     // 载入历史记录
     function _loadHitory() {

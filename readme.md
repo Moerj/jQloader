@@ -9,7 +9,7 @@ https://moerj.github.io/jQloader
 - 动态加载，ajax 动态加载html页面
 - 历史记录，ajax 页面会存入浏览器历史记录
 - 路由机制，ajax 加载#号后地址指向的页面
-- 进度条，页面顶部自动的进度条效果
+- loading效果，支持进度条、蒙层等方式
 
   
   

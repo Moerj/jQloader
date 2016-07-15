@@ -169,7 +169,7 @@
 
 
     // 拦截并重写 a 标签事件
-    const _reWriteLinks = () => {
+    function _reWriteLinks() {
         $('body').on('click','a',(e) => {
             let a = e.currentTarget;
 
