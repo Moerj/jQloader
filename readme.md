@@ -8,13 +8,13 @@ https://moerj.github.io/jQloader
 - 指令模板，html 页面直接引入其他页面
 - 动态加载，ajax 动态加载html页面
 - 历史记录，ajax 页面会存入浏览器历史记录
-- 路由机制，ajax 加载#号后地址指向的页面
-- loading效果，支持进度条、蒙层等方式
+- 路由机制，路由地址以#号连接在浏览器地址栏
+- 自动载入效果，包括：进度条、蒙层等方式
 
   
   
 ## 安装
-引入依赖jQuery 或者 Zepto
+引入依赖 jQuery 或者 Zepto
 ```html
 <script src="jquery.js"></script>
 <script src="jQloader.js"></script>
