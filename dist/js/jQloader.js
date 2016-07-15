@@ -46,7 +46,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.color = '#58a2d1';
             this.transition = '10s width';
             this.timer = null;
-            this.$progress = $('<span></span>');
+            this.$progress = $('<span class="jQloader-ProgressBar"></span>');
             this.reset();
             $('html').append(this.$progress);
         }
@@ -129,12 +129,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         function LoadingLock() {
             _classCallCheck(this, LoadingLock);
 
-            this.$element = $('<div>\
-                                    <div class="loadingBox">\
-                                        <span class="loadingEffect fa fa-spin fa-spinner"></span>\
-                                        <span class="loadingText"> loading...</span>\
-                                    </div>\
-                                </div>');
+            this.$element = $('<div class="jQloader-loading"><div class="loadingBox">\
+                                    <span class="loadingEffect fa fa-spin fa-spinner"></span>\
+                                    <span class="loadingText"> loading...</span>\
+                                </div></div>');
             this.$loadingEffect = this.$element.find('.loadingEffect');
             this.$loadingText = this.$element.find('.loadingText');
             this.$loadingBox = this.$element.find('.loadingBox');
@@ -161,7 +159,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 fontSize: '16px'
             });
 
-            $('body').append(this.$element);
+            $('html').append(this.$element);
         }
 
         _createClass(LoadingLock, [{
