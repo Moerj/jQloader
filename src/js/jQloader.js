@@ -9,6 +9,10 @@
 (($) => {
     'use strict';
 
+    const $window = $(window);
+    const $html = $('html');
+    const $body = $('body');
+
 
     // 对一个 dom 建立jQloader的存储机制
     const JQloader = (dom) => {
@@ -39,7 +43,7 @@
             this.timer = null;
             this.$progress = $('<span class="jQloader-ProgressBar"></span>');
             this.reset();
-            $('html').append(this.$progress);
+            $html.append(this.$progress);
         }
         reset() {
             this.$progress.css({
@@ -87,27 +91,28 @@
                 }, 700)
             }
         }
-        destroy() {
+        /* destroy() {
             this.$progress.remove();
             this.$progress = null;
-        }
+        } */
     }
 
     // 容器加载 loading 效果
     class LoadingLock {
         constructor() {
-            this.$element = $('<div class="jQloader-loading"><div class="loadingBox">\
-                                    <span class="loadingEffect fa fa-spin fa-spinner"></span>\
-                                    <span class="loadingText"> loading...</span>\
-                                </div></div>');
+            this.$element = $('<div class="jQloader-loading">\
+                                    <div class="loadingBox">\
+                                        <span class="loadingEffect fa fa-spin fa-spinner"></span>\
+                                        <span class="loadingText"> loading...</span>\
+                                    </div>\
+                                </div>');
             this.$loadingEffect = this.$element.find('.loadingEffect');
             this.$loadingText = this.$element.find('.loadingText');
             this.$loadingBox = this.$element.find('.loadingBox');
 
-            let $win = $(window);
             this.$element.css({
-                width: $win.width(),
-                height: $win.height(),
+                width: $window.width(),
+                height: $window.height(),
                 position: 'absolute',
                 zIndex: 9999,
                 top: 0,
@@ -127,9 +132,16 @@
                 fontSize: '16px'
             })
 
-            $('html').append(this.$element);
+            $html.append(this.$element);
+        }
+        _reSize(){
+            this.$element.css({
+                width: $window.width(),
+                height: $window.height()
+            });
         }
         lock(){
+            this._reSize();
             this.$element.show();
         }
         unlock(){
@@ -169,7 +181,7 @@
 
     // 拦截并重写 a 标签事件
     function _reWriteLinks() {
-        $('body').on('click','a',(e) => {
+        $body.on('click','a',(e) => {
             let a = e.currentTarget;
 
             // load 类型

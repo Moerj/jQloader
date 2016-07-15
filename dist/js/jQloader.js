@@ -15,8 +15,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function ($) {
     'use strict';
 
-    // 对一个 dom 建立jQloader的存储机制
+    var $window = $(window);
+    var $html = $('html');
+    var $body = $('body');
 
+    // 对一个 dom 建立jQloader的存储机制
     var JQloader = function JQloader(dom) {
         if (dom._jQloader === undefined) {
             dom._jQloader = new Map();
@@ -48,7 +51,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.timer = null;
             this.$progress = $('<span class="jQloader-ProgressBar"></span>');
             this.reset();
-            $('html').append(this.$progress);
+            $html.append(this.$progress);
         }
 
         _createClass(ProgressBar, [{
@@ -111,12 +114,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }, 700);
                 }
             }
-        }, {
-            key: 'destroy',
-            value: function destroy() {
+            /* destroy() {
                 this.$progress.remove();
                 this.$progress = null;
-            }
+            } */
+
         }]);
 
         return ProgressBar;
@@ -129,18 +131,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         function LoadingLock() {
             _classCallCheck(this, LoadingLock);
 
-            this.$element = $('<div class="jQloader-loading"><div class="loadingBox">\
-                                    <span class="loadingEffect fa fa-spin fa-spinner"></span>\
-                                    <span class="loadingText"> loading...</span>\
-                                </div></div>');
+            this.$element = $('<div class="jQloader-loading">\
+                                    <div class="loadingBox">\
+                                        <span class="loadingEffect fa fa-spin fa-spinner"></span>\
+                                        <span class="loadingText"> loading...</span>\
+                                    </div>\
+                                </div>');
             this.$loadingEffect = this.$element.find('.loadingEffect');
             this.$loadingText = this.$element.find('.loadingText');
             this.$loadingBox = this.$element.find('.loadingBox');
 
-            var $win = $(window);
             this.$element.css({
-                width: $win.width(),
-                height: $win.height(),
+                width: $window.width(),
+                height: $window.height(),
                 position: 'absolute',
                 zIndex: 9999,
                 top: 0,
@@ -160,12 +163,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 fontSize: '16px'
             });
 
-            $('html').append(this.$element);
+            $html.append(this.$element);
         }
 
         _createClass(LoadingLock, [{
+            key: '_reSize',
+            value: function _reSize() {
+                this.$element.css({
+                    width: $window.width(),
+                    height: $window.height()
+                });
+            }
+        }, {
             key: 'lock',
             value: function lock() {
+                this._reSize();
                 this.$element.show();
             }
         }, {
@@ -210,7 +222,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // 拦截并重写 a 标签事件
     function _reWriteLinks() {
-        $('body').on('click', 'a', function (e) {
+        $body.on('click', 'a', function (e) {
             var a = e.currentTarget;
 
             // load 类型
