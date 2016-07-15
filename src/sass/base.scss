@@ -6,6 +6,11 @@ $bgColor2: #39eeb8;
 @mixin gradient-back {
     background: linear-gradient(to right, $bgColor2, $bgColor1);
 }
+
+
+body{
+    font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+}
 .navbar {
     margin: 0;
     a {
