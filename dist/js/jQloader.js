@@ -12,6 +12,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * GitHub    https://github.com/Moerj/jQloader
  */
 
+if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
+    throw new Error('jQloader\'s JavaScript requires jQuery or Zepto');
+}
+
 (function ($) {
     'use strict';
 
@@ -348,8 +352,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var $container = $(this);
 
         if (!$container.length) {
-            console.error($container.selector + ' not a vaild selector');
-            return $container;
+            throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
         var DEFAULT = {

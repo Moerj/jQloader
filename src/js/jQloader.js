@@ -6,6 +6,10 @@
  * GitHub    https://github.com/Moerj/jQloader
  */
 
+if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
+    throw new Error('jQloader\'s JavaScript requires jQuery or Zepto')
+}
+
 (($) => {
     'use strict';
 
@@ -310,8 +314,7 @@
         let $container = $(this);
 
         if (!$container.length) {
-            console.error($container.selector + ' not a vaild selector');
-            return $container;
+            throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
         let DEFAULT = {
