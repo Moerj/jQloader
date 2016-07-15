@@ -50,7 +50,7 @@ gulp.task('sass', function() {
 
 gulp.task('js-es2015', function() {
     // 编译js-es6
-    return gulp.src(jsSrc)
+    return gulp.src('src/js/jQloader.js')
         .pipe(babel({
             presets: ['es2015']
         }))

@@ -13,6 +13,7 @@
     <script src="dist/lib/ztree_toc.js"></script>
 
     <script>
+        $.loadingLock.lock();
         $.getScript('https://cdn.bootcss.com/markdown-it/7.0.0/markdown-it.min.js', function() {
             $.ajax({
                     url: './readme.md'
@@ -35,6 +36,10 @@
                         }
                     });
                 })
+                .always(function () {
+                    $.loadingLock.unlock();
+                })
+
         });
         setTimeout(function () {
 

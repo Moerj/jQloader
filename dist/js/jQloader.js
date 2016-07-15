@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.1.3
+ * jQloader  v0.1.4
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -37,7 +37,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
     };
 
-    // 加载时页面顶部进度条
+    // 进度条
 
     var ProgressBar = function () {
         function ProgressBar() {
@@ -120,6 +120,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }]);
 
         return ProgressBar;
+    }();
+
+    // 容器加载 loading 效果
+
+
+    var LoadingLock = function () {
+        function LoadingLock() {
+            _classCallCheck(this, LoadingLock);
+
+            this.$element = $('<div>\
+                                    <div class="loadingBox">\
+                                        <span class="loadingEffect fa fa-spin fa-spinner"></span>\
+                                        <span class="loadingText"> loading...</span>\
+                                    </div>\
+                                </div>');
+            this.$loadingEffect = this.$element.find('.loadingEffect');
+            this.$loadingText = this.$element.find('.loadingText');
+            this.$loadingBox = this.$element.find('.loadingBox');
+
+            var $win = $(window);
+            this.$element.css({
+                width: $win.width(),
+                height: $win.height(),
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                display: 'none'
+            });
+            this.$loadingBox.css({
+                position: 'absolute',
+                padding: '5px 15px',
+                top: '50%',
+                left: '50%',
+                transform: 'translate3d(-50%,-50%,0)',
+                background: 'rgba(0, 0, 0, 0.3)',
+                textAlign: 'center',
+                lineHeight: '80px',
+                color: '#fff',
+                fontSize: '16px'
+            });
+
+            $('body').append(this.$element);
+        }
+
+        _createClass(LoadingLock, [{
+            key: 'lock',
+            value: function lock() {
+                this.$element.show();
+            }
+        }, {
+            key: 'unlock',
+            value: function unlock() {
+                this.$element.hide();
+            }
+        }]);
+
+        return LoadingLock;
     }();
 
     // 编译当前页面 html 标签上的 loadPage 指令
@@ -266,6 +323,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 
     // 暴露的公共方法 ==============================
+
     // loadPage 加载完后的回调组，用于指令触发load后的回调
     $.fn.loadFinish = function (call_back) {
         var container = $(this);
@@ -285,6 +343,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var DEFAULT = {
             history: true,
             progress: true,
+            lock: false,
             cache: true,
             async: true,
             title: null,
@@ -393,7 +452,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
 
         // 开启 loading 进度条
-        if (OPTS.progress && !OPTS.strict) $.progressBar.start();
+        if (OPTS.progress && !OPTS.strict) {
+            $.progressBar.start();
+        }
+
+        // 开启 loading 锁定
+        if (OPTS.lock) {
+            $.loadingLock.lock();
+        }
 
         // 请求页面
         $.ajax({
@@ -411,7 +477,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             },
             complete: function complete() {
                 // 进度条结束
-                if (OPTS.progress && !OPTS.strict) $.progressBar.finish();
+                if (OPTS.progress && !OPTS.strict) {
+                    $.progressBar.finish();
+                }
+
+                // 关闭锁定
+                if (OPTS.lock) {
+                    $.loadingLock.unlock();
+                }
 
                 // 本次 ajax 的回调
                 if (call_back) call_back();
@@ -421,9 +494,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return $container;
     };
 
-    // 创建进度条
+    // 进度条实例
     if (!$.progressBar) {
         $.progressBar = new ProgressBar();
+    }
+
+    //  loading 实例
+    if (!$.loadingLock) {
+        $.loadingLock = new LoadingLock();
     }
 
     $(function () {

@@ -1,4 +1,4 @@
-# jQloader v0.1.3
+# jQloader v0.1.4
 
 ## Home
 https://moerj.github.io/jQloader
@@ -69,12 +69,13 @@ ajax 方式加载页面到容器中
 // 在一个 div 容器中加载页面
 $('div').loadPage({
     url: 'url string',  //请求地址，必须
-    history: true,      //是否写入浏览器历史，默认 true
-    progress: true,     //是否加载时显示进度条，默认 true
-    cache: true,        //是否开启缓存，默认 true
-    async: true,        //是否异步，默认 true
+    history: true,      //写入浏览器历史，默认 true
+    progress: true,     //加载时显示进度条，默认 true
+    lock: false,        //加载时锁定页面，默认 false
+    cache: true,        //开启缓存，默认 true
+    async: true,        //异步，默认 true
     title: 'string',    //浏览器tab页名称，默认 null
-    strict: false       //是否严格模式加载 ajxa，默认 false
+    strict: false       //严格模式加载 ajxa，默认 false
 })
 ```
   
@@ -98,7 +99,15 @@ $.progressBar
 .finish()           //走完进度条 100%
 .setColor('color')  //设置进度条颜色
 ```
-  
+
+### loadingLock
+手动开启一个 loading 效果并锁定界面。  
+支持 FontAwesome 图标库。  
+```javascript
+$.loadingLock
+.lock()         //锁定
+.unlock()       //解锁
+```  
 
 ## other
 
@@ -110,5 +119,5 @@ $.progressBar
 - 使用 strict 模式请求页面，这样可以保证是完全重载。
   
   
-## TODO
-- 功能丰富
+## update news
+- 新增loadingLock
