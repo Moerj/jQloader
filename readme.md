@@ -1,6 +1,6 @@
 # jQloader v0.1.4
 
-## Home
+## 首页
 https://moerj.github.io/jQloader
   
   
@@ -109,7 +109,7 @@ $.loadingLock
 .unlock()       //解锁
 ```  
 
-## other
+## 其他
 
 ### strict
 使用严格模式进行 ajxa 请求，此时请求会完全重载整个页面，防止重复js运行。  
@@ -118,6 +118,3 @@ $.loadingLock
 - 请确保这部分 js 没有对主页面和全局对象有事件绑定，不然很可能再次打开此页面时会重复绑定事件。  
 - 使用 strict 模式请求页面，这样可以保证是完全重载。
   
-  
-## update news
-- 新增loadingLock
