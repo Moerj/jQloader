@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.4
+ * jQloader  v0.1.5
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -12,6 +12,7 @@
     const $window = $(window);
     const $html = $('html');
     const $body = $('body');
+    let $router;
 
 
     // 对一个 dom 建立jQloader的存储机制
@@ -154,6 +155,11 @@
     // 编译当前页面 html 标签上的 loadPage 指令
     function _compile() {
 
+        // 检测路由容器
+        if (!$router || !$router.length) {
+            $router = $('jq-router').eq(0);
+        }
+
         // 编译include
         const _compile_jqInclude = (dom) => {
             let $dom = $(dom);
@@ -195,7 +201,7 @@
                 if (container) {
                     $container = $(container)
                 } else {
-                    $container = $('jq-router')
+                    $container = $router
                 }
 
                 // 是否严格模式
@@ -244,10 +250,10 @@
             if (historyData.id) {
                 $container = $('#' + historyData.id)
             } else {
-                $container = $('jq-router')
+                $container = $router
             }
 
-            if (!$container.length) {
+            if (!$container || !$container.length) {
                 return;
             }
 
@@ -261,14 +267,9 @@
             return;
         }
 
-        if (locationHash) {
-            let $container = $('jq-router');
+        if (locationHash && $router.length) {
 
-            if (!$container.length) {
-                return;
-            }
-
-            $container.loadPage({
+            $router.loadPage({
                 url: locationHash,
                 history: false,
                 progress: true

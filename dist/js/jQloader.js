@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.1.4
+ * jQloader  v0.1.5
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -18,6 +18,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var $window = $(window);
     var $html = $('html');
     var $body = $('body');
+    var $router = void 0;
 
     // 对一个 dom 建立jQloader的存储机制
     var JQloader = function JQloader(dom) {
@@ -195,6 +196,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     function _compile() {
 
+        // 检测路由容器
+        if (!$router || !$router.length) {
+            $router = $('jq-router').eq(0);
+        }
+
         // 编译include
         var _compile_jqInclude = function _compile_jqInclude(dom) {
             var $dom = $(dom);
@@ -236,7 +242,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if (container) {
                     $container = $(container);
                 } else {
-                    $container = $('jq-router');
+                    $container = $router;
                 }
 
                 // 是否严格模式
@@ -283,10 +289,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (historyData.id) {
                 $container = $('#' + historyData.id);
             } else {
-                $container = $('jq-router');
+                $container = $router;
             }
 
-            if (!$container.length) {
+            if (!$container || !$container.length) {
                 return;
             }
 
@@ -300,14 +306,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return;
         }
 
-        if (locationHash) {
-            var _$container = $('jq-router');
+        if (locationHash && $router.length) {
 
-            if (!_$container.length) {
-                return;
-            }
-
-            _$container.loadPage({
+            $router.loadPage({
                 url: locationHash,
                 history: false,
                 progress: true
