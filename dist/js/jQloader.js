@@ -142,6 +142,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 width: $win.width(),
                 height: $win.height(),
                 position: 'absolute',
+                zIndex: 9999,
                 top: 0,
                 left: 0,
                 display: 'none'
