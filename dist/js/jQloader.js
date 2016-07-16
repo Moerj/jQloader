@@ -132,9 +132,9 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     // 容器加载 loading 效果
 
 
-    var LoadingLock = function () {
-        function LoadingLock() {
-            _classCallCheck(this, LoadingLock);
+    var Loading = function () {
+        function Loading() {
+            _classCallCheck(this, Loading);
 
             this.$element = $('<div class="jQloader-loading">\
                                     <div class="loadingBox">\
@@ -171,7 +171,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             $html.append(this.$element);
         }
 
-        _createClass(LoadingLock, [{
+        _createClass(Loading, [{
             key: '_reSize',
             value: function _reSize() {
                 this.$element.css({
@@ -180,19 +180,19 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 });
             }
         }, {
-            key: 'lock',
-            value: function lock() {
+            key: 'show',
+            value: function show() {
                 this._reSize();
                 this.$element.show();
             }
         }, {
-            key: 'unlock',
-            value: function unlock() {
+            key: 'hide',
+            value: function hide() {
                 this.$element.hide();
             }
         }]);
 
-        return LoadingLock;
+        return Loading;
     }();
 
     // 编译当前页面 html 标签上的 loadPage 指令
@@ -358,7 +358,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         var DEFAULT = {
             history: true,
             progress: true,
-            lock: false,
+            loading: false,
             cache: true,
             async: true,
             title: null,
@@ -473,8 +473,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         }
 
         // 开启 loading 锁定
-        if (OPTS.lock) {
-            $.loadingLock.lock();
+        if (OPTS.loading) {
+            $.loadingMask.show();
         }
 
         // 请求页面
@@ -498,8 +498,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 }
 
                 // 关闭锁定
-                if (OPTS.lock) {
-                    $.loadingLock.unlock();
+                if (OPTS.loading) {
+                    $.loadingMask.hide();
                 }
 
                 // 本次 ajax 的回调
@@ -517,7 +517,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         $.progressBar = new ProgressBar();
 
         // 创建并暴露 loading蒙层
-        $.loadingLock = new LoadingLock();
+        $.loadingMask = new Loading();
 
         // 重写 a 标签事件
         _reWriteLinks();

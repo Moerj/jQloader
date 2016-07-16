@@ -71,7 +71,7 @@ $('div').loadPage({
     url: 'url string',  //请求地址，必须
     history: true,      //写入浏览器历史，默认 true
     progress: true,     //加载时显示进度条，默认 true
-    lock: false,        //加载时锁定页面，默认 false
+    loading: false,     //显示加载提示，并锁定界面，默认 false
     cache: true,        //开启缓存，默认 true
     async: true,        //异步，默认 true
     title: 'string',    //浏览器tab页名称，默认 null
@@ -100,13 +100,13 @@ $.progressBar
 .setColor('color')  //设置进度条颜色
 ```
 
-### loadingLock
+### loadingMask
 手动开启一个 loading 效果并锁定界面。  
 支持 FontAwesome 图标库。  
 ```javascript
-$.loadingLock
-.lock()         //锁定
-.unlock()       //解锁
+$.loadingMask
+.show()
+.hide()
 ```  
 
 ## 其他

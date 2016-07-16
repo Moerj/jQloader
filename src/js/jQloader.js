@@ -103,7 +103,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     }
 
     // 容器加载 loading 效果
-    class LoadingLock {
+    class Loading {
         constructor() {
             this.$element = $('<div class="jQloader-loading">\
                                     <div class="loadingBox">\
@@ -145,11 +145,11 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 height: $window.height()
             });
         }
-        lock(){
+        show(){
             this._reSize();
             this.$element.show();
         }
-        unlock(){
+        hide(){
             this.$element.hide();
         }
     }
@@ -320,7 +320,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         let DEFAULT = {
             history: true,
             progress: true,
-            lock: false,
+            loading: false,
             cache: true,
             async: true,
             title: null,
@@ -425,8 +425,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         }
 
         // 开启 loading 锁定
-        if (OPTS.lock) {
-            $.loadingLock.lock();
+        if (OPTS.loading) {
+            $.loadingMask.show();
         }
 
 
@@ -459,8 +459,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 }
 
                 // 关闭锁定
-                if (OPTS.lock) {
-                    $.loadingLock.unlock();
+                if (OPTS.loading) {
+                    $.loadingMask.hide();
                 }
 
                 // 本次 ajax 的回调
@@ -480,7 +480,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         $.progressBar = new ProgressBar();
 
         // 创建并暴露 loading蒙层
-        $.loadingLock = new LoadingLock();
+        $.loadingMask = new Loading();
 
         // 重写 a 标签事件
         _reWriteLinks();
