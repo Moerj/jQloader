@@ -231,11 +231,11 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 let $anchor = $(document.getElementById(id));
                 // 滚动到锚点元素
                 if ($.fn.animate) {
-                    $('html, body').animate({
+                    $body.animate({
                         scrollTop: $anchor.offset().top
                     }, 300);
                 }else{
-                    document.getElementsByTagName('body')[0].scrollTop = $anchor.offset().top;
+                    $body.scrollTop($anchor.offset().top);
                 }
 
                 return;
