@@ -18,7 +18,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     const $body = $('body');
     let $router;
 
-    const LOAD_DEFAULT = {
+    const OPTS_DEFAULT = {
         history: true,
         progress: true,
         loading: false,
@@ -248,7 +248,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 // 需要请求的 url 就是 load 属性的值
                 opts.url = opts.load;
 
-                opts = $.extend({}, LOAD_DEFAULT, opts);
+                opts = $.extend({}, OPTS_DEFAULT, opts);
 
                 $container.loadPage(opts);
 
@@ -354,7 +354,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
-        OPTS = $.extend({}, LOAD_DEFAULT, OPTS);
+        OPTS = $.extend({}, OPTS_DEFAULT, OPTS);
 
         // ajax 请求完成后的一些列链式流程
         const _todo = (OPTS, data) => {
