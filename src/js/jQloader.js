@@ -101,7 +101,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 this.$progress.css({
                     width: this.max(),
                     transition: '0.5s width'
-                });
+                }); 
                 if (!this.timer) {
                     this.timer = setTimeout(() => {
                         this.timer = null;
@@ -109,10 +109,6 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                     }, 700)
                 }
             }
-            /* destroy() {
-                this.$progress.remove();
-                this.$progress = null;
-            } */
     }
 
     // 容器加载 loading 效果

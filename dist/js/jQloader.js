@@ -24,7 +24,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     var $body = $('body');
     var $router = void 0;
 
-    var LOAD_DEFAULT = {
+    var OPTS_DEFAULT = {
         history: true,
         progress: true,
         loading: false,
@@ -132,11 +132,6 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                     }, 700);
                 }
             }
-            /* destroy() {
-                this.$progress.remove();
-                this.$progress = null;
-            } */
-
         }]);
 
         return ProgressBar;
@@ -311,7 +306,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
                 opts.url = opts.load;
 
-                opts = $.extend({}, LOAD_DEFAULT, opts);
+                opts = $.extend({}, OPTS_DEFAULT, opts);
 
                 $container.loadPage(opts);
 
@@ -414,7 +409,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
-        OPTS = $.extend({}, LOAD_DEFAULT, OPTS);
+        OPTS = $.extend({}, OPTS_DEFAULT, OPTS);
 
         // ajax 请求完成后的一些列链式流程
         var _todo = function _todo(OPTS, data) {
