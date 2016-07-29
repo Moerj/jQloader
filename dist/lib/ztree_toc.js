@@ -1,4 +1,9 @@
 /**
+ * ztree 根据当前 html h标签 生成tree 目录
+ * 
+ */
+
+/**
  * 1.1.1 = 1*100*100 + 1*100 + 1
  * 1.2.2 = 1*100*100 + 2*100 + 3
  *
@@ -59,24 +64,24 @@ function factor(opts, count, current) {
      * 根据header创建目录内容
      */
     function create_toc(opts) {
-        $(opts.documment_selector).find(':header').each(function(index,el) {
-			var exclude = opts.exclude;
-			var isExclude = false;
+        $(opts.documment_selector).find(':header').each(function(index, el) {
+            var exclude = opts.exclude;
+            var isExclude = false;
 
-			for (var i = 0; i < exclude.length; i++) {
-				if (exclude[i] === el.localName) {
-					return true;
-				}
-			}
+            for (var i = 0; i < exclude.length; i++) {
+                if (exclude[i] === el.localName) {
+                    return true;
+                }
+            }
 
-			if (!isExclude) {
+            if (!isExclude) {
 
-				var level = parseInt(this.nodeName.substring(1), 10);
+                var level = parseInt(this.nodeName.substring(1), 10);
 
-				_rename_header_content(opts, this, level);
+                _rename_header_content(opts, this, level);
 
-				_add_header_node(opts, $(this));
-			}
+                _add_header_node(opts, $(this));
+            }
 
         }); //end each
     }
@@ -88,9 +93,9 @@ function factor(opts, count, current) {
         var t = $(opts._zTree);
         t = $.fn.zTree.init(t, opts.ztreeSetting, opts._header_nodes);
 
-		if (opts.is_expand_all) {
-			t.expandAll(opts.is_expand_all);
-		}
+        if (opts.is_expand_all) {
+            t.expandAll(opts.is_expand_all);
+        }
 
         if (opts.is_posion_top == true) {
             opts.ztreeStyle.top = '0px';
@@ -118,7 +123,6 @@ function factor(opts, count, current) {
             opts._headers[level - 1]++;
         } else if (opts._headers.length < level) {
             for (var i = 0; i < (level - opts._headers.length); i++) {
-                // console.log('push 1');
                 opts._headers.push(1);
             }
         }
@@ -183,49 +187,49 @@ function factor(opts, count, current) {
      */
     function bind_scroll_event_and_update_postion(opts) {
         var timeout;
-		var treeList = opts._zTree.find('a');
+        var treeList = opts._zTree.find('a');
 
         var highlight_on_scroll = function() {
-			if (!opts._zTree[0].clientHeight) {
-				// 防止 ajax 刷新页面，多次绑定 scroll event
-				$(opts.scroll_selector).off('scroll');
-				return;
-			}
+            if (!opts._zTree[0].clientHeight) {
+                // 防止 ajax 刷新页面，多次绑定 scroll event
+                $(opts.scroll_selector).off('scroll');
+                return;
+            }
             if (timeout) {
                 clearTimeout(timeout);
             }
             timeout = setTimeout(function() {
-				var treeObj = $.fn.zTree.getZTreeObj(opts._zTree.attr('id'));
-				var needExpandNode;
-				var otherNode = treeObj.getNodes()[0].children;
+                var treeObj = $.fn.zTree.getZTreeObj(opts._zTree.attr('id'));
+                var needExpandNode;
+                var otherNode = treeObj.getNodes()[0].children;
 
                 for (var i = 0; i < opts._header_offsets.length; i++) {
                     var h = $(opts._header_offsets[i]);
-					if (!($(window).scrollTop()>h.offset().top)) {
+                    if (!($(window).scrollTop() > h.offset().top)) {
                         // tree list set
-						treeList.removeClass('curSelectedNode');
-						treeList.eq(i).addClass('curSelectedNode');
-						var tid = treeList.eq(i).parent().attr('id');
-						needExpandNode = treeObj.getNodeByTId(tid);
+                        treeList.removeClass('curSelectedNode');
+                        treeList.eq(i).addClass('curSelectedNode');
+                        var tid = treeList.eq(i).parent().attr('id');
+                        needExpandNode = treeObj.getNodeByTId(tid);
 
-						break;
-					}
+                        break;
+                    }
                 }
 
-				for (var j = 0; j < otherNode.length; j++) {
-					treeObj.expandNode(otherNode[j], false);
-				}
+                for (var j = 0; j < otherNode.length; j++) {
+                    treeObj.expandNode(otherNode[j], false, false, false);
+                }
 
-				treeObj.expandNode(needExpandNode, true);
-				treeObj.expandNode(needExpandNode.getParentNode(), true);
+                treeObj.expandNode(needExpandNode, true, false, false);
+                treeObj.expandNode(needExpandNode.getParentNode(), true, false, false);
 
             }, opts.refresh_scroll_time);
         };
-
         if (opts.highlight_on_scroll) {
             $(opts.scroll_selector).on('scroll', highlight_on_scroll);
             highlight_on_scroll();
         }
+
     }
 
     /*
@@ -279,7 +283,7 @@ function factor(opts, count, current) {
          * 如果标题是唯一的，建议开启此选项，如果标题不唯一，还是使用数字吧
          * 此选项默认是false，不开启
          */
-		exclude:[],
+        exclude: [],
         use_head_anchor: false,
         scroll_selector: window,
         highlight_offset: 0,
@@ -319,7 +323,7 @@ function factor(opts, count, current) {
                 showLine: true,
                 showIcon: false,
                 selectedMulti: false,
-				expandSpeed: ""
+                expandSpeed: ""
             },
             data: {
                 simpleData: {
@@ -331,10 +335,10 @@ function factor(opts, count, current) {
             },
             callback: {
                 beforeClick: function(treeId, treeNode) {
-					if (treeNode.isParent) {
-						var treeObj = $.fn.zTree.getZTreeObj(treeId);
-						treeObj.expandNode(treeNode, true, true, true);
-					}
+                    if (treeNode.isParent) {
+                        var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                        treeObj.expandNode(treeNode, true, true, true);
+                    }
                     // 点击 tree ，内容标题高亮一次
                     if ($.fn.ztree_toc.defaults.is_highlight_selected_line == true) {
                         var $hTag = $(document.getElementById(treeNode.url.substr(1)))
@@ -345,14 +349,13 @@ function factor(opts, count, current) {
                         });
                     }
                 },
-                onRightClick: function(event, treeId, treeNode) {
-                },
-				onNodeCreated: function (event, treeId, treeNode) {
-					var treeObj = $.fn.zTree.getZTreeObj(treeId);
-				    if (treeNode.level == 1) {
-						treeObj.expandNode(treeNode,false,false,false);
-				    }
-				}
+                onRightClick: function(event, treeId, treeNode) {},
+                onNodeCreated: function(event, treeId, treeNode) {
+                    var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                    if (treeNode.level == 1) {
+                        treeObj.expandNode(treeNode, false, false, false);
+                    }
+                }
             }
         }
     };
