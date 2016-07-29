@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.6
+ * jQloader  v0.1.7
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -17,6 +17,19 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     const $html = $('html');
     const $body = $('body');
     let $router;
+
+    const LOAD_DEFAULT = {
+        history: true,
+        progress: true,
+        loading: false,
+        cache: true,
+        async: true,
+        title: null,
+        // strict: true, 开启严格模式，
+        // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
+        // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
+        strict: false
+    }
 
 
     // 对一个 dom 建立jQloader的存储机制
@@ -84,22 +97,22 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             });
         }
         finish() {
-            this.stop();
-            this.$progress.css({
-                width: this.max(),
-                transition: '0.5s width'
-            });
-            if (!this.timer) {
-                this.timer = setTimeout(() => {
-                    this.timer = null;
-                    this.reset();
-                }, 700)
+                this.stop();
+                this.$progress.css({
+                    width: this.max(),
+                    transition: '0.5s width'
+                });
+                if (!this.timer) {
+                    this.timer = setTimeout(() => {
+                        this.timer = null;
+                        this.reset();
+                    }, 700)
+                }
             }
-        }
-        /* destroy() {
-            this.$progress.remove();
-            this.$progress = null;
-        } */
+            /* destroy() {
+                this.$progress.remove();
+                this.$progress = null;
+            } */
     }
 
     // 容器加载 loading 效果
@@ -139,17 +152,17 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
             $html.append(this.$element);
         }
-        _reSize(){
+        _reSize() {
             this.$element.css({
                 width: $window.width(),
                 height: $window.height()
             });
         }
-        show(){
+        show() {
             this._reSize();
             this.$element.show();
         }
-        hide(){
+        hide() {
             this.$element.hide();
         }
     }
@@ -191,7 +204,21 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
     // 拦截并重写 a 标签事件
     function _reWriteLinks() {
-        $body.on('click','a',(e) => {
+
+        // 判断标签上的属性是否合法，允许默认布尔值，无参数时为 true
+        //  例如：<a strict></a> === <a strict="true"></a>
+        const isAttr = (attributeObj) => {
+            let value = attributeObj.value;
+            if (value === "false") {
+                return false;
+            } else if (value === "true" || value === '') {
+                return true;
+            } else {
+                return value
+            }
+        }
+
+        $body.on('click', 'a', (e) => {
             let a = e.currentTarget;
 
             // load 类型
@@ -200,7 +227,6 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 e.preventDefault();
                 let container = a.getAttribute('to');
                 let $container;
-                let isStrict = false;
 
                 if (container) {
                     $container = $(container)
@@ -208,16 +234,23 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                     $container = $router
                 }
 
-                // 是否严格模式
-                if (a.getAttribute('strict') != null) {
-                    isStrict = true;
+                let opts = {};
+                let attrs = a.attributes;
+
+                // 将所有属性遍历，并拼装成对象
+                for (let attr of attrs) {
+                    let res = isAttr(attr);
+                    if (res !== undefined) {
+                        opts[attr.nodeName] = res;
+                    }
                 }
 
-                $container.loadPage({
-                    url: loadUrl,
-                    title: a.title,
-                    strict: isStrict
-                })
+                // 需要请求的 url 就是 load 属性的值
+                opts.url = opts.load;
+
+                opts = $.extend({}, LOAD_DEFAULT, opts);
+
+                $container.loadPage(opts);
 
                 return;
             }
@@ -234,7 +267,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                     $body.animate({
                         scrollTop: $anchor.offset().top
                     }, 300);
-                }else{
+                } else {
                     $body.scrollTop($anchor.offset().top);
                 }
 
@@ -321,20 +354,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
-        let DEFAULT = {
-            history: true,
-            progress: true,
-            loading: false,
-            cache: true,
-            async: true,
-            title: null,
-            // strict: true, 开启严格模式，
-            // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
-            // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
-            strict: false
-        }
-
-        OPTS = $.extend({}, DEFAULT, OPTS);
+        OPTS = $.extend({}, LOAD_DEFAULT, OPTS);
 
         // ajax 请求完成后的一些列链式流程
         const _todo = (OPTS, data) => {
@@ -458,7 +478,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             },
             complete: () => {
                 // 进度条结束
-                if (OPTS.progress && !OPTS.strict){
+                if (OPTS.progress && !OPTS.strict) {
                     $.progressBar.finish();
                 }
 

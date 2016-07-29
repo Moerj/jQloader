@@ -1,4 +1,4 @@
-# jQloader v0.1.6
+# jQloader v0.1.7
 一款精简而丰富的微型框架，非常适合以 jQuery 为核心的项目使用。  
 它的核心功能为 ajax + pushState 实现异步加载、路由、浏览器历史。并集成指令模板、进度条、loading效果等功能。
 
@@ -52,19 +52,59 @@ jq-router 指令仅仅是用来读取浏览器历史数据和路由页面的。
 
 ### a
 可以直接使用 a 标签来请求一个页面，当你使用了 load 属性时，会屏蔽 herf 属性。  
-a 标签的锚点功能依然保留，但点击后标签不会改变地址栏，因为#号已被路由功能占用。_to be optimized_
-- load  点击后请求的url地址
-- to  请求到的页面存放容器，不设置时默认存放在 jq-router 容器
-- title  设置页面名称
-- strict  此参数会开启严格加载模式
+a 标签的锚点功能依然保留，但点击后标签不会改变地址栏，因为#号已被路由功能占用。_to be optimized_  
+
+私有属性：
+- __load__  点击后请求的url地址
+- __to__  请求到的页面存放容器，不设置时默认存放在 jq-router 容器
+
 ```html
 <!-- 将hellow页面加载到id为container的容器中，页面名称显示为hellow jQloader -->
 <a load="./hellow.html" to="#container" title="hellow jQloader"></a>
 ```  
 
+支持所有 [Options](#Options) 参数，属性参数可以为空，例如：
+```html
+<a strict loading></a>
+<!--等价于-->
+<a strict="true" loading="true"></a>
+
+<a></a>
+<!--等价于-->
+<a strict="false" loading="false"></a>
+```
+
+## Options
+
+### history
+写入浏览器历史，默认 true
+
+### progress
+加载时显示进度条，默认 true
+
+### loading
+显示加载提示，并锁定界面，默认 false
+
+### cache
+ajax开启缓存，默认 true
+
+### async
+ajax请求异步，默认 true
+
+### title
+请求数据后，改变浏览器tab页名称，默认 null
+
+### strict
+严格模式加载 ajxa，默认 false  
+使用严格模式进行 ajxa 请求，此时请求会完全重载整个页面，防止重复js运行。  
+虽然支持 ajax 载入页面的 js 运行，但是由于安全限制以及可能出现的 js 重复运行的问题，建议将所有 js 写在主页面，事件以委托方式绑定。  
+若你还是想在 ajax 页面中写 js， 有2种办法确保安全：  
+- 请确保这部分 js 没有对主页面和全局对象有事件绑定，不然很可能再次打开此页面时会重复绑定事件。  
+- 使用 strict 模式请求页面，这样可以保证是完全重载。
+
   
-## 接口  
-  
+## API
+
 ### loadPage
 加载页面  
 ajax 方式加载页面到容器中
@@ -105,19 +145,9 @@ $.progressBar
 
 ### loadingMask
 手动开启一个 loading 效果并锁定界面。  
-支持 FontAwesome 图标库。  
+支持 FontAwesome 图标库，当引入后会有加载特效。
 ```javascript
 $.loadingMask
 .show()
 .hide()
 ```  
-
-## 其他
-
-### strict
-使用严格模式进行 ajxa 请求，此时请求会完全重载整个页面，防止重复js运行。  
-虽然支持 ajax 载入页面的 js 运行，但是由于安全限制以及可能出现的 js 重复运行的问题，建议将所有 js 写在主页面，事件以委托方式绑定。  
-若你还是想在 ajax 页面中写 js， 有2种办法确保安全：  
-- 请确保这部分 js 没有对主页面和全局对象有事件绑定，不然很可能再次打开此页面时会重复绑定事件。  
-- 使用 strict 模式请求页面，这样可以保证是完全重载。
-  

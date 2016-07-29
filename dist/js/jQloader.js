@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.1.6
+ * jQloader  v0.1.7
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -23,6 +23,19 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     var $html = $('html');
     var $body = $('body');
     var $router = void 0;
+
+    var LOAD_DEFAULT = {
+        history: true,
+        progress: true,
+        loading: false,
+        cache: true,
+        async: true,
+        title: null,
+        // strict: true, 开启严格模式，
+        // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
+        // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
+        strict: false
+    };
 
     // 对一个 dom 建立jQloader的存储机制
     var JQloader = function JQloader(dom) {
@@ -232,6 +245,20 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
     // 拦截并重写 a 标签事件
     function _reWriteLinks() {
+
+        // 判断标签上的属性是否合法，允许默认布尔值，无参数时为 true
+        //  例如：<a strict></a> === <a strict="true"></a>
+        var isAttr = function isAttr(attributeObj) {
+            var value = attributeObj.value;
+            if (value === "false") {
+                return false;
+            } else if (value === "true" || value === '') {
+                return true;
+            } else {
+                return value;
+            }
+        };
+
         $body.on('click', 'a', function (e) {
             var a = e.currentTarget;
 
@@ -241,7 +268,6 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 e.preventDefault();
                 var container = a.getAttribute('to');
                 var $container = void 0;
-                var isStrict = false;
 
                 if (container) {
                     $container = $(container);
@@ -249,16 +275,45 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                     $container = $router;
                 }
 
-                // 是否严格模式
-                if (a.getAttribute('strict') != null) {
-                    isStrict = true;
+                var opts = {};
+                var attrs = a.attributes;
+
+                // 将所有属性遍历，并拼装成对象
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = attrs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var attr = _step.value;
+
+                        var res = isAttr(attr);
+                        if (res !== undefined) {
+                            opts[attr.nodeName] = res;
+                        }
+                    }
+
+                    // 需要请求的 url 就是 load 属性的值
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
                 }
 
-                $container.loadPage({
-                    url: loadUrl,
-                    title: a.title,
-                    strict: isStrict
-                });
+                opts.url = opts.load;
+
+                opts = $.extend({}, LOAD_DEFAULT, opts);
+
+                $container.loadPage(opts);
 
                 return;
             }
@@ -359,20 +414,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
         }
 
-        var DEFAULT = {
-            history: true,
-            progress: true,
-            loading: false,
-            cache: true,
-            async: true,
-            title: null,
-            // strict: true, 开启严格模式，
-            // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
-            // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
-            strict: false
-        };
-
-        OPTS = $.extend({}, DEFAULT, OPTS);
+        OPTS = $.extend({}, LOAD_DEFAULT, OPTS);
 
         // ajax 请求完成后的一些列链式流程
         var _todo = function _todo(OPTS, data) {
