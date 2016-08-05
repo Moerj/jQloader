@@ -1,13 +1,13 @@
-# jQloader v0.1.7
+# jQloader v0.1.8
 一款精简而丰富的微型框架，非常适合以 jQuery 为核心的项目使用。  
 它的核心功能为 ajax + pushState 实现异步加载、路由、浏览器历史。并集成指令模板、进度条、loading效果等功能。
 
 
-## 首页
+## Home
 https://moerj.github.io/jQloader
   
   
-## 特性
+## Features
 - 指令模板，html 页面直接引入其他页面
 - 动态加载，ajax 动态加载html页面
 - 历史记录，ajax 页面会存入浏览器历史记录
@@ -16,7 +16,7 @@ https://moerj.github.io/jQloader
 
   
   
-## 安装
+## Install
 引入依赖 jQuery 或者 Zepto
 ```html
 <script src="jquery.js"></script>
@@ -24,7 +24,7 @@ https://moerj.github.io/jQloader
 ```
   
   
-## 指令
+## HTML-Order
   
 ### jq-include
 引入页面  

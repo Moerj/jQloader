@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.7
+ * jQloader  v0.1.8
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -258,13 +258,14 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 let id = hash.substr(1);
                 // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
                 let $anchor = $(document.getElementById(id));
+                let $win = $html.add($body);
                 // 滚动到锚点元素
                 if ($.fn.animate) {
-                    $body.animate({
-                        scrollTop: $anchor.offset().top
+                    $win.animate({
+                        scrollTop: $anchor.offset().top + 'px'
                     }, 300);
                 } else {
-                    $body.scrollTop($anchor.offset().top);
+                    $win.scrollTop($anchor.offset().top);
                 }
 
                 return;
