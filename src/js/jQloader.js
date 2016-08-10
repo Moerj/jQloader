@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.8
+ * jQloader  v0.1.9
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -97,18 +97,18 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             });
         }
         finish() {
-                this.stop();
-                this.$progress.css({
-                    width: this.max(),
-                    transition: '0.5s width'
-                }); 
-                if (!this.timer) {
-                    this.timer = setTimeout(() => {
-                        this.timer = null;
-                        this.reset();
-                    }, 700)
-                }
+            this.stop();
+            this.$progress.css({
+                width: this.max(),
+                transition: '0.5s width'
+            });
+            if (!this.timer) {
+                this.timer = setTimeout(() => {
+                    this.timer = null;
+                    this.reset();
+                }, 700)
             }
+        }
     }
 
     // 容器加载 loading 效果
@@ -221,6 +221,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             let loadUrl = a.getAttribute('load');
             if (loadUrl) {
                 e.preventDefault();
+
                 let container = a.getAttribute('to');
                 let $container;
 
@@ -234,7 +235,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 let attrs = a.attributes;
 
                 // 将所有属性遍历，并拼装成对象
-                for (let attr of attrs) {
+                for (let i = 0; i < attrs.length; i++) {
+                    let attr = attrs[i];
                     let res = isAttr(attr);
                     if (res !== undefined) {
                         opts[attr.nodeName] = res;
@@ -245,6 +247,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 opts.url = opts.load;
 
                 opts = $.extend({}, OPTS_DEFAULT, opts);
+
 
                 $container.loadPage(opts);
 

@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.1.8
+ * jQloader  v0.1.9
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -261,6 +261,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             var loadUrl = a.getAttribute('load');
             if (loadUrl) {
                 e.preventDefault();
+
                 var container = a.getAttribute('to');
                 var $container = void 0;
 
@@ -274,36 +275,15 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                 var attrs = a.attributes;
 
                 // 将所有属性遍历，并拼装成对象
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = attrs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var attr = _step.value;
-
-                        var res = isAttr(attr);
-                        if (res !== undefined) {
-                            opts[attr.nodeName] = res;
-                        }
-                    }
-
-                    // 需要请求的 url 就是 load 属性的值
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
+                for (var i = 0; i < attrs.length; i++) {
+                    var attr = attrs[i];
+                    var res = isAttr(attr);
+                    if (res !== undefined) {
+                        opts[attr.nodeName] = res;
                     }
                 }
 
+                // 需要请求的 url 就是 load 属性的值
                 opts.url = opts.load;
 
                 opts = $.extend({}, OPTS_DEFAULT, opts);
