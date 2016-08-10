@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.1.9
+ * jQloader  v0.2.0
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -10,7 +10,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     throw new Error('jQloader\'s JavaScript requires jQuery or Zepto')
 }
 
-(($) => {
+(() => {
     'use strict';
 
     const $window = $(window);
@@ -515,4 +515,4 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         // 请求一次浏览器历史
         _loadHitory();
     })
-})($)
+})()
