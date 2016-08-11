@@ -4,6 +4,8 @@
 
 var gulp = require('gulp'); //gulp主功能
 
+var sourcemaps = require('gulp-sourcemaps'); //source map
+
 // 语法编译
 var babel = require('gulp-babel');
 var sass = require('gulp-sass');
@@ -51,15 +53,17 @@ gulp.task('sass', function() {
 gulp.task('js-es2015', function() {
     // 编译js-es6
     return gulp.src('src/js/jQloader.js')
+        .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
         }))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/js'))
 })
 
 gulp.task('js-compress', function() {
     // js编译并压缩
-    return gulp.src(['dist/js/jQloader.js','!dist/js/**/*.min.js'])
+    return gulp.src(['dist/js/jQloader.js', '!dist/js/**/*.min.js'])
         .pipe(uglify({
             preserveComments: 'license'
         }))
@@ -107,6 +111,6 @@ gulp.task('default', [], function() {
     // 文件改变，自动执行编译或打包的任务
     gulp.watch(jsSrc, ['js-es2015'])
     gulp.watch(sassSrc, ['sass'])
-    gulp.watch('dist/js/jQloader.js',['js-compress'])
+    gulp.watch('dist/js/jQloader.js', ['js-compress'])
 
 });

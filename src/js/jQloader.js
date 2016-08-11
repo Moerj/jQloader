@@ -32,7 +32,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     }
 
 
-    // 对一个 dom 建立jQloader的存储机制
+    // 对一个 dom 建立jQloader的存储机制 
     const JQloader = (dom) => {
         if (dom._jQloader === undefined) {
             dom._jQloader = {}
@@ -322,12 +322,18 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         // 没有 url 参数，代表当前回到无路由页面
         // 因为用清空或者重请求等方法很难判断逻辑
         // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
-        let needReload = sessionStorage.getItem('jqRouterReload');
-        if (needReload) {
-            sessionStorage.removeItem('jqRouterReload');
-        } else {
-            sessionStorage.setItem('jqRouterReload', true);
+        // let needReload = sessionStorage.getItem('jqRouterReload');
+        // if (needReload) {
+        //     sessionStorage.removeItem('jqRouterReload');
+        // } else {
+        //     sessionStorage.setItem('jqRouterReload', true);
+        //     window.location.replace(window.location.href);
+        // }
+        let curr = JQloader(window).get('reloadRouter')
+        if (curr) {
             window.location.replace(window.location.href);
+        }else{
+            JQloader(window).set('reloadRouter',true)
         }
     }
 
