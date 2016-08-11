@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.2.1
+ * jQloader  v0.2.2
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -10,8 +10,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     throw new Error('jQloader\'s JavaScript requires jQuery or Zepto')
 }
 
-(() => {
-    'use strict';
+{
 
     const $window = $(window);
     const $html = $('html');
@@ -321,19 +320,11 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
         // 没有 url 参数，代表当前回到无路由页面
         // 因为用清空或者重请求等方法很难判断逻辑
-        // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
-        // let needReload = sessionStorage.getItem('jqRouterReload');
-        // if (needReload) {
-        //     sessionStorage.removeItem('jqRouterReload');
-        // } else {
-        //     sessionStorage.setItem('jqRouterReload', true);
-        //     window.location.replace(window.location.href);
-        // }
-        let curr = JQloader(window).get('reloadRouter')
-        if (curr) {
+        // 强制刷新一次，释放内存，也让它真正回到首页
+        if (JQloader(window).get('_jQloader_reload')) {
             window.location.replace(window.location.href);
         }else{
-            JQloader(window).set('reloadRouter',true)
+            JQloader(window).set('_jQloader_reload',true)
         }
     }
 
@@ -521,4 +512,5 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         // 请求一次浏览器历史
         _loadHitory();
     })
-})()
+
+}

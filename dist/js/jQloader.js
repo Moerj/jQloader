@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.2.1
+ * jQloader  v0.2.2
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -16,545 +16,542 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     throw new Error('jQloader\'s JavaScript requires jQuery or Zepto');
 }
 
-(function () {
-    'use strict';
+{
+    (function () {
 
-    var $window = $(window);
-    var $html = $('html');
-    var $body = $('body');
-    var $router = void 0;
+        // 编译当前页面 html 标签上的 loadPage 指令
+        var _compile = function _compile() {
 
-    var OPTS_DEFAULT = {
-        history: true,
-        progress: true,
-        loading: false,
-        cache: true,
-        async: true,
-        title: null,
-        // strict: true, 开启严格模式，
-        // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
-        // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
-        strict: false
-    };
+            // 检测路由容器
+            if (!$router || !$router.length) {
+                $router = $('jq-router').eq(0);
+            }
 
-    // 对一个 dom 建立jQloader的存储机制 
-    var JQloader = function JQloader(dom) {
-        if (dom._jQloader === undefined) {
-            dom._jQloader = {};
-        }
-        return {
-            get: function get(key) {
-                return dom._jQloader[key];
-            },
-            set: function set(key, val) {
-                dom._jQloader[key] = val;
-            },
-            push: function push(key, val) {
-                if (dom._jQloader[key] === undefined) {
-                    dom._jQloader[key] = [];
+            // 编译include
+            var _compile_jqInclude = function _compile_jqInclude(dom) {
+                var $dom = $(dom);
+                var url = $dom.attr('src');
+                if (url) {
+                    (function () {
+                        var $container = $('<div></div>');
+                        $dom.replaceWith($container);
+                        $container.loadPage({
+                            url: url,
+                            history: false,
+                            progress: false
+                        }, function () {
+                            // 编译并ajax加载完成后的回调
+                            $container.children().eq(0).unwrap();
+                        });
+                    })();
                 }
-                dom._jQloader[key].push(val);
+            };
+            var includeDoms = document.getElementsByTagName('jq-include');
+            for (var i = 0; i < includeDoms.length; i++) {
+                _compile_jqInclude(includeDoms[i]);
             }
         };
-    };
 
-    // 进度条
+        // 拦截并重写 a 标签事件
 
-    var ProgressBar = function () {
-        function ProgressBar() {
-            _classCallCheck(this, ProgressBar);
 
-            this.color = '#58a2d1';
-            this.transition = '10s width';
-            this.timer = null;
-            this.$progress = $('<span class="jQloader-ProgressBar"></span>');
-            this.reset();
-            $html.append(this.$progress);
-        }
+        var _reWriteLinks = function _reWriteLinks() {
 
-        _createClass(ProgressBar, [{
-            key: 'reset',
-            value: function reset() {
-                this.$progress.css({
-                    backgroundColor: this.color,
-                    transition: 'none',
-                    height: '2px',
-                    width: 0,
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    zIndex: 9999,
-                    boxShadow: '1px 1px 2px 0 ' + this.color
-                });
-            }
-        }, {
-            key: 'max',
-            value: function max() {
-                return document.body.clientWidth;
-            }
-        }, {
-            key: 'setColor',
-            value: function setColor(color) {
-                if (typeof color === 'string') {
-                    this.color = color;
+            // 判断标签上的属性是否合法，允许默认布尔值，无参数时为 true
+            //  例如：<a strict></a> === <a strict="true"></a>
+            var isAttr = function isAttr(attributeObj) {
+                var value = attributeObj.value;
+                if (value === "false") {
+                    return false;
+                } else if (value === "true" || value === '') {
+                    return true;
+                } else {
+                    return value;
                 }
+            };
+
+            $body.on('click', 'a', function (e) {
+                var a = e.currentTarget;
+
+                // load 类型
+                var loadUrl = a.getAttribute('load');
+                if (loadUrl) {
+                    e.preventDefault();
+
+                    var container = a.getAttribute('to');
+                    var $container = void 0;
+
+                    if (container) {
+                        $container = $(container);
+                    } else {
+                        $container = $router;
+                    }
+
+                    var opts = {};
+                    var attrs = a.attributes;
+
+                    // 将所有属性遍历，并拼装成对象
+                    for (var i = 0; i < attrs.length; i++) {
+                        var attr = attrs[i];
+                        var res = isAttr(attr);
+                        if (res !== undefined) {
+                            opts[attr.nodeName] = res;
+                        }
+                    }
+
+                    // 需要请求的 url 就是 load 属性的值
+                    opts.url = opts.load;
+
+                    opts = $.extend({}, OPTS_DEFAULT, opts);
+
+                    $container.loadPage(opts);
+
+                    return;
+                }
+
+                // 锚点类型
+                var hash = a.hash;
+                if (hash) {
+                    e.preventDefault();
+                    var id = hash.substr(1);
+                    // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
+                    var $anchor = $(document.getElementById(id));
+                    var $win = $html.add($body);
+                    // 滚动到锚点元素
+                    if ($.fn.animate) {
+                        $win.animate({
+                            scrollTop: $anchor.offset().top + 'px'
+                        }, 300);
+                    } else {
+                        $win.scrollTop($anchor.offset().top);
+                    }
+
+                    return;
+                }
+            });
+        };
+
+        // 载入历史记录
+
+
+        var _loadHitory = function _loadHitory() {
+            var historyData = history.state;
+            var locationHash = document.location.hash.substr(1);
+
+            if (historyData) {
+                var url = historyData.url;
+                var $container = void 0;
+
+                // 指定读取历史页面的容器
+                if (historyData.id) {
+                    $container = $('#' + historyData.id);
+                } else {
+                    $container = $router;
+                }
+
+                if (!$container || !$container.length) {
+                    return;
+                }
+
+                $container.loadPage({
+                    url: url,
+                    history: false,
+                    progress: true,
+                    title: historyData.title
+                });
+
+                return;
             }
-        }, {
-            key: 'start',
-            value: function start() {
+
+            if (locationHash && $router.length) {
+
+                $router.loadPage({
+                    url: locationHash,
+                    history: false,
+                    progress: true
+                });
+
+                return;
+            }
+
+            // 没有 url 参数，代表当前回到无路由页面
+            // 因为用清空或者重请求等方法很难判断逻辑
+            // 强制刷新一次，释放内存，也让它真正回到首页
+            if (JQloader(window).get('_jQloader_reload')) {
+                window.location.replace(window.location.href);
+            } else {
+                JQloader(window).set('_jQloader_reload', true);
+            }
+        };
+
+        // 地址栏改变
+
+
+        var $window = $(window);
+        var $html = $('html');
+        var $body = $('body');
+        var $router = void 0;
+
+        var OPTS_DEFAULT = {
+            history: true,
+            progress: true,
+            loading: false,
+            cache: true,
+            async: true,
+            title: null,
+            // strict: true, 开启严格模式，
+            // 加载的 ajax 页面有 script 脚本时会强制重载当前页，
+            // 用于清空页面所有ajax 残留 js，防止 js 重复绑定等问题
+            strict: false
+        };
+
+        // 对一个 dom 建立jQloader的存储机制 
+        var JQloader = function JQloader(dom) {
+            if (dom._jQloader === undefined) {
+                dom._jQloader = {};
+            }
+            return {
+                get: function get(key) {
+                    return dom._jQloader[key];
+                },
+                set: function set(key, val) {
+                    dom._jQloader[key] = val;
+                },
+                push: function push(key, val) {
+                    if (dom._jQloader[key] === undefined) {
+                        dom._jQloader[key] = [];
+                    }
+                    dom._jQloader[key].push(val);
+                }
+            };
+        };
+
+        // 进度条
+
+        var ProgressBar = function () {
+            function ProgressBar() {
+                _classCallCheck(this, ProgressBar);
+
+                this.color = '#58a2d1';
+                this.transition = '10s width';
+                this.timer = null;
+                this.$progress = $('<span class="jQloader-ProgressBar"></span>');
                 this.reset();
-                this.$progress.css({
-                    width: this.max(),
-                    transition: this.transition
-                });
+                $html.append(this.$progress);
             }
-        }, {
-            key: 'stop',
-            value: function stop() {
-                this.$progress.css({
-                    width: this.$progress.width()
-                });
-            }
-        }, {
-            key: 'finish',
-            value: function finish() {
-                var _this2 = this;
 
-                this.stop();
-                this.$progress.css({
-                    width: this.max(),
-                    transition: '0.5s width'
-                });
-                if (!this.timer) {
-                    this.timer = setTimeout(function () {
-                        _this2.timer = null;
-                        _this2.reset();
-                    }, 700);
+            _createClass(ProgressBar, [{
+                key: 'reset',
+                value: function reset() {
+                    this.$progress.css({
+                        backgroundColor: this.color,
+                        transition: 'none',
+                        height: '2px',
+                        width: 0,
+                        position: 'fixed',
+                        left: 0,
+                        top: 0,
+                        zIndex: 9999,
+                        boxShadow: '1px 1px 2px 0 ' + this.color
+                    });
                 }
-            }
-        }]);
+            }, {
+                key: 'max',
+                value: function max() {
+                    return document.body.clientWidth;
+                }
+            }, {
+                key: 'setColor',
+                value: function setColor(color) {
+                    if (typeof color === 'string') {
+                        this.color = color;
+                    }
+                }
+            }, {
+                key: 'start',
+                value: function start() {
+                    this.reset();
+                    this.$progress.css({
+                        width: this.max(),
+                        transition: this.transition
+                    });
+                }
+            }, {
+                key: 'stop',
+                value: function stop() {
+                    this.$progress.css({
+                        width: this.$progress.width()
+                    });
+                }
+            }, {
+                key: 'finish',
+                value: function finish() {
+                    var _this2 = this;
 
-        return ProgressBar;
-    }();
+                    this.stop();
+                    this.$progress.css({
+                        width: this.max(),
+                        transition: '0.5s width'
+                    });
+                    if (!this.timer) {
+                        this.timer = setTimeout(function () {
+                            _this2.timer = null;
+                            _this2.reset();
+                        }, 700);
+                    }
+                }
+            }]);
 
-    // 容器加载 loading 效果
+            return ProgressBar;
+        }();
+
+        // 容器加载 loading 效果
 
 
-    var Loading = function () {
-        function Loading() {
-            _classCallCheck(this, Loading);
+        var Loading = function () {
+            function Loading() {
+                _classCallCheck(this, Loading);
 
-            this.$element = $('<div class="jQloader-loading">\
+                this.$element = $('<div class="jQloader-loading">\
                                     <div class="loadingBox">\
                                         <span class="loadingEffect fa fa-spin fa-spinner"></span>\
                                         <span class="loadingText"> loading...</span>\
                                     </div>\
                                 </div>');
-            this.$loadingEffect = this.$element.find('.loadingEffect');
-            this.$loadingText = this.$element.find('.loadingText');
-            this.$loadingBox = this.$element.find('.loadingBox');
+                this.$loadingEffect = this.$element.find('.loadingEffect');
+                this.$loadingText = this.$element.find('.loadingText');
+                this.$loadingBox = this.$element.find('.loadingBox');
 
-            this.$element.css({
-                width: $window.width(),
-                height: $window.height(),
-                position: 'absolute',
-                zIndex: 9999,
-                top: 0,
-                left: 0,
-                display: 'none'
-            });
-            this.$loadingBox.css({
-                position: 'absolute',
-                padding: '5px 15px',
-                top: '50%',
-                left: '50%',
-                transform: 'translate3d(-50%,-50%,0)',
-                background: 'rgba(0, 0, 0, 0.3)',
-                textAlign: 'center',
-                lineHeight: '80px',
-                color: '#fff',
-                fontSize: '16px'
-            });
-
-            $html.append(this.$element);
-        }
-
-        _createClass(Loading, [{
-            key: '_reSize',
-            value: function _reSize() {
                 this.$element.css({
                     width: $window.width(),
-                    height: $window.height()
+                    height: $window.height(),
+                    position: 'absolute',
+                    zIndex: 9999,
+                    top: 0,
+                    left: 0,
+                    display: 'none'
                 });
+                this.$loadingBox.css({
+                    position: 'absolute',
+                    padding: '5px 15px',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate3d(-50%,-50%,0)',
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    textAlign: 'center',
+                    lineHeight: '80px',
+                    color: '#fff',
+                    fontSize: '16px'
+                });
+
+                $html.append(this.$element);
             }
-        }, {
-            key: 'show',
-            value: function show() {
-                this._reSize();
-                this.$element.show();
-            }
-        }, {
-            key: 'hide',
-            value: function hide() {
-                this.$element.hide();
-            }
-        }]);
 
-        return Loading;
-    }();
-
-    // 编译当前页面 html 标签上的 loadPage 指令
-
-
-    function _compile() {
-
-        // 检测路由容器
-        if (!$router || !$router.length) {
-            $router = $('jq-router').eq(0);
-        }
-
-        // 编译include
-        var _compile_jqInclude = function _compile_jqInclude(dom) {
-            var $dom = $(dom);
-            var url = $dom.attr('src');
-            if (url) {
-                (function () {
-                    var $container = $('<div></div>');
-                    $dom.replaceWith($container);
-                    $container.loadPage({
-                        url: url,
-                        history: false,
-                        progress: false
-                    }, function () {
-                        // 编译并ajax加载完成后的回调
-                        $container.children().eq(0).unwrap();
+            _createClass(Loading, [{
+                key: '_reSize',
+                value: function _reSize() {
+                    this.$element.css({
+                        width: $window.width(),
+                        height: $window.height()
                     });
-                })();
-            }
-        };
-        var includeDoms = document.getElementsByTagName('jq-include');
-        for (var i = 0; i < includeDoms.length; i++) {
-            _compile_jqInclude(includeDoms[i]);
-        }
-    }
-
-    // 拦截并重写 a 标签事件
-    function _reWriteLinks() {
-
-        // 判断标签上的属性是否合法，允许默认布尔值，无参数时为 true
-        //  例如：<a strict></a> === <a strict="true"></a>
-        var isAttr = function isAttr(attributeObj) {
-            var value = attributeObj.value;
-            if (value === "false") {
-                return false;
-            } else if (value === "true" || value === '') {
-                return true;
-            } else {
-                return value;
-            }
-        };
-
-        $body.on('click', 'a', function (e) {
-            var a = e.currentTarget;
-
-            // load 类型
-            var loadUrl = a.getAttribute('load');
-            if (loadUrl) {
-                e.preventDefault();
-
-                var container = a.getAttribute('to');
-                var $container = void 0;
-
-                if (container) {
-                    $container = $(container);
-                } else {
-                    $container = $router;
                 }
-
-                var opts = {};
-                var attrs = a.attributes;
-
-                // 将所有属性遍历，并拼装成对象
-                for (var i = 0; i < attrs.length; i++) {
-                    var attr = attrs[i];
-                    var res = isAttr(attr);
-                    if (res !== undefined) {
-                        opts[attr.nodeName] = res;
-                    }
+            }, {
+                key: 'show',
+                value: function show() {
+                    this._reSize();
+                    this.$element.show();
                 }
-
-                // 需要请求的 url 就是 load 属性的值
-                opts.url = opts.load;
-
-                opts = $.extend({}, OPTS_DEFAULT, opts);
-
-                $container.loadPage(opts);
-
-                return;
-            }
-
-            // 锚点类型
-            var hash = a.hash;
-            if (hash) {
-                e.preventDefault();
-                var id = hash.substr(1);
-                // 用原生 js 获取 dom，因为jQuery $('')选择器获取中文的id会忽略空格。
-                var $anchor = $(document.getElementById(id));
-                var $win = $html.add($body);
-                // 滚动到锚点元素
-                if ($.fn.animate) {
-                    $win.animate({
-                        scrollTop: $anchor.offset().top + 'px'
-                    }, 300);
-                } else {
-                    $win.scrollTop($anchor.offset().top);
+            }, {
+                key: 'hide',
+                value: function hide() {
+                    this.$element.hide();
                 }
+            }]);
 
-                return;
-            }
+            return Loading;
+        }();
+
+        window.addEventListener("popstate", function () {
+            _loadHitory();
         });
-    }
 
-    // 载入历史记录
-    function _loadHitory() {
-        var historyData = history.state;
-        var locationHash = document.location.hash.substr(1);
+        // 暴露的公共方法 ==============================
 
-        if (historyData) {
-            var url = historyData.url;
-            var $container = void 0;
+        // loadPage 加载完后的回调组，用于指令触发load后的回调
+        $.fn.loadFinish = function (call_back) {
+            var container = $(this);
+            JQloader(container[0]).push('loadPageCallBacks', call_back);
+            return container;
+        };
 
-            // 指定读取历史页面的容器
-            if (historyData.id) {
-                $container = $('#' + historyData.id);
-            } else {
-                $container = $router;
+        // 加载一个页面
+        $.fn.loadPage = function (OPTS, call_back) {
+            var $container = $(this);
+
+            if (!$container.length) {
+                throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
             }
 
-            if (!$container || !$container.length) {
-                return;
-            }
+            OPTS = $.extend({}, OPTS_DEFAULT, OPTS);
 
-            $container.loadPage({
-                url: url,
-                history: false,
-                progress: true,
-                title: historyData.title
-            });
-
-            return;
-        }
-
-        if (locationHash && $router.length) {
-
-            $router.loadPage({
-                url: locationHash,
-                history: false,
-                progress: true
-            });
-
-            return;
-        }
-
-        // 没有 url 参数，代表当前回到无路由页面
-        // 因为用清空或者重请求等方法很难判断逻辑
-        // 强制刷新一次，释放内存，也让它真正回到首页，用sessionStorage避免死循环刷新
-        // let needReload = sessionStorage.getItem('jqRouterReload');
-        // if (needReload) {
-        //     sessionStorage.removeItem('jqRouterReload');
-        // } else {
-        //     sessionStorage.setItem('jqRouterReload', true);
-        //     window.location.replace(window.location.href);
-        // }
-        var curr = JQloader(window).get('reloadRouter');
-        if (curr) {
-            window.location.replace(window.location.href);
-        } else {
-            JQloader(window).set('reloadRouter', true);
-        }
-    }
-
-    // 地址栏改变
-    window.addEventListener("popstate", function () {
-        _loadHitory();
-    });
-
-    // 暴露的公共方法 ==============================
-
-    // loadPage 加载完后的回调组，用于指令触发load后的回调
-    $.fn.loadFinish = function (call_back) {
-        var container = $(this);
-        JQloader(container[0]).push('loadPageCallBacks', call_back);
-        return container;
-    };
-
-    // 加载一个页面
-    $.fn.loadPage = function (OPTS, call_back) {
-        var $container = $(this);
-
-        if (!$container.length) {
-            throw new Error('\'' + this.prevObject.selector + '\' not a vaild selector');
-        }
-
-        OPTS = $.extend({}, OPTS_DEFAULT, OPTS);
-
-        // ajax 请求完成后的一些列链式流程
-        var _todo = function _todo(OPTS, data) {
-            var _this = {
-                strict: function strict() {
-                    // 严格模式强制重载有 js 的 ajax 页面
-                    if (OPTS.strict && data.indexOf('<script') >= 0) {
-                        var host = window.location.host;
-                        window.location.reload(host + '/#' + OPTS.url);
-                    }
-                    return _this;
-                },
-                history: function (_history) {
-                    function history() {
-                        return _history.apply(this, arguments);
-                    }
-
-                    history.toString = function () {
-                        return _history.toString();
-                    };
-
-                    return history;
-                }(function () {
-                    // 记录浏览器历史
-                    if (OPTS.history) {
-                        // 处理 url 格式，浏览器地址栏去掉./开头
-                        var url = OPTS.url;
-                        if (OPTS.url.substring(0, 2) === './') {
-                            url = OPTS.url.substring(2);
+            // ajax 请求完成后的一些列链式流程
+            var _todo = function _todo(OPTS, data) {
+                var _this = {
+                    strict: function strict() {
+                        // 严格模式强制重载有 js 的 ajax 页面
+                        if (OPTS.strict && data.indexOf('<script') >= 0) {
+                            var host = window.location.host;
+                            window.location.reload(host + '/#' + OPTS.url);
+                        }
+                        return _this;
+                    },
+                    history: function (_history) {
+                        function history() {
+                            return _history.apply(this, arguments);
                         }
 
-                        if ($container[0].localName === 'jq-router') {
-                            // 浏览器地址栏操作
-                            history.pushState({
-                                title: OPTS.title,
-                                url: OPTS.url
-                            }, '', '#' + url);
-                        } else {
-                            var hashList = window.location.hash.split("#");
-                            var routerUrl = hashList[1];
-                            history.pushState({
-                                title: OPTS.title,
-                                id: $container.attr('id'),
-                                url: OPTS.url
-                            }, '', '#' + routerUrl + '#' + OPTS.url);
-                        }
-                    }
-                    return _this;
-                }),
-                title: function title() {
-                    // 修改页面 title
-                    if (OPTS.title) {
-                        window.document.title = OPTS.title;
-                    }
-                    return _this;
-                },
-                render: function render() {
-                    // 写入页面
-                    $container.html(data);
-                    return _this;
-                },
-                zepto: function zepto() {
-                    // 解决Zepto ajxa 请求到的页面 script 标签执行问题
-                    if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
-                        var script = $container.find('script');
-                        for (var i = 0; i < script.length; i++) {
-                            var src = script[i].src;
-                            if (src) {
-                                // Zepto不会运行外联script
-                                $.get(src);
+                        history.toString = function () {
+                            return _history.toString();
+                        };
+
+                        return history;
+                    }(function () {
+                        // 记录浏览器历史
+                        if (OPTS.history) {
+                            // 处理 url 格式，浏览器地址栏去掉./开头
+                            var url = OPTS.url;
+                            if (OPTS.url.substring(0, 2) === './') {
+                                url = OPTS.url.substring(2);
+                            }
+
+                            if ($container[0].localName === 'jq-router') {
+                                // 浏览器地址栏操作
+                                history.pushState({
+                                    title: OPTS.title,
+                                    url: OPTS.url
+                                }, '', '#' + url);
                             } else {
-                                // Zepto会执行两次页面的内联script
-                                $(script[i]).remove();
+                                var hashList = window.location.hash.split("#");
+                                var routerUrl = hashList[1];
+                                history.pushState({
+                                    title: OPTS.title,
+                                    id: $container.attr('id'),
+                                    url: OPTS.url
+                                }, '', '#' + routerUrl + '#' + OPTS.url);
                             }
                         }
-                    }
-                    return _this;
-                },
-                compile: function compile() {
-                    // 编译新页面上的指令
-                    _compile();
-                    return _this;
-                },
-                callbacks: function callbacks() {
-                    // 运行容器上的回调方法组
-                    var callBacks = JQloader($container[0]).get('loadPageCallBacks');
-                    if (callBacks) {
-                        for (var i = 0; i < callBacks.length; i++) {
-                            callBacks[i]();
+                        return _this;
+                    }),
+                    title: function title() {
+                        // 修改页面 title
+                        if (OPTS.title) {
+                            window.document.title = OPTS.title;
                         }
+                        return _this;
+                    },
+                    render: function render() {
+                        // 写入页面
+                        $container.html(data);
+                        return _this;
+                    },
+                    zepto: function zepto() {
+                        // 解决Zepto ajxa 请求到的页面 script 标签执行问题
+                        if (typeof Zepto != 'undefined' && typeof jQuery == 'undefined') {
+                            var script = $container.find('script');
+                            for (var i = 0; i < script.length; i++) {
+                                var src = script[i].src;
+                                if (src) {
+                                    // Zepto不会运行外联script
+                                    $.get(src);
+                                } else {
+                                    // Zepto会执行两次页面的内联script
+                                    $(script[i]).remove();
+                                }
+                            }
+                        }
+                        return _this;
+                    },
+                    compile: function compile() {
+                        // 编译新页面上的指令
+                        _compile();
+                        return _this;
+                    },
+                    callbacks: function callbacks() {
+                        // 运行容器上的回调方法组
+                        var callBacks = JQloader($container[0]).get('loadPageCallBacks');
+                        if (callBacks) {
+                            for (var i = 0; i < callBacks.length; i++) {
+                                callBacks[i]();
+                            }
+                        }
+                        return _this;
                     }
-                    return _this;
-                }
 
+                };
+                return _this;
             };
-            return _this;
+
+            // 开启 loading 进度条
+            if (OPTS.progress && !OPTS.strict) {
+                $.progressBar.start();
+            }
+
+            // 开启 loading 锁定
+            if (OPTS.loading) {
+                $.loadingMask.show();
+            }
+
+            // 请求页面
+            $.ajax({
+                dataType: 'html',
+                url: OPTS.url,
+                cache: OPTS.cache,
+                async: OPTS.async,
+                timeout: 10000,
+                success: function success(data) {
+
+                    _todo(OPTS, data).strict().history().title().render().zepto().compile().callbacks();
+                },
+                error: function error() {
+                    console.warn('页面载入失败！');
+                },
+                complete: function complete() {
+                    // 进度条结束
+                    if (OPTS.progress && !OPTS.strict) {
+                        $.progressBar.finish();
+                    }
+
+                    // 关闭锁定
+                    if (OPTS.loading) {
+                        $.loadingMask.hide();
+                    }
+
+                    // 本次 ajax 的回调
+                    if (call_back) call_back();
+                }
+            });
+
+            return $container;
         };
 
-        // 开启 loading 进度条
-        if (OPTS.progress && !OPTS.strict) {
-            $.progressBar.start();
-        }
+        $(function () {
+            // jQloader所在页面/首页初始化 dom 完毕
 
-        // 开启 loading 锁定
-        if (OPTS.loading) {
-            $.loadingMask.show();
-        }
+            // 创建并暴露 进度条
+            $.progressBar = new ProgressBar();
 
-        // 请求页面
-        $.ajax({
-            dataType: 'html',
-            url: OPTS.url,
-            cache: OPTS.cache,
-            async: OPTS.async,
-            timeout: 10000,
-            success: function success(data) {
+            // 创建并暴露 loading蒙层
+            $.loadingMask = new Loading();
 
-                _todo(OPTS, data).strict().history().title().render().zepto().compile().callbacks();
-            },
-            error: function error() {
-                console.warn('页面载入失败！');
-            },
-            complete: function complete() {
-                // 进度条结束
-                if (OPTS.progress && !OPTS.strict) {
-                    $.progressBar.finish();
-                }
+            // 重写 a 标签事件
+            _reWriteLinks();
 
-                // 关闭锁定
-                if (OPTS.loading) {
-                    $.loadingMask.hide();
-                }
+            // 执行一次编译
+            _compile();
 
-                // 本次 ajax 的回调
-                if (call_back) call_back();
-            }
+            // 请求一次浏览器历史
+            _loadHitory();
         });
-
-        return $container;
-    };
-
-    $(function () {
-        // jQloader所在页面/首页初始化 dom 完毕
-
-        // 创建并暴露 进度条
-        $.progressBar = new ProgressBar();
-
-        // 创建并暴露 loading蒙层
-        $.loadingMask = new Loading();
-
-        // 重写 a 标签事件
-        _reWriteLinks();
-
-        // 执行一次编译
-        _compile();
-
-        // 请求一次浏览器历史
-        _loadHitory();
-    });
-})();
+    })();
+}
 //# sourceMappingURL=jQloader.js.map
