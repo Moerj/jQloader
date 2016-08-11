@@ -1,4 +1,4 @@
-# jQloader v0.2.0
+# jQloader v0.2.1
 一款精简而丰富的微型框架，非常适合以 jQuery 为核心的项目使用。  
 它的核心功能为 ajax + pushState 实现异步加载、路由、浏览器历史。并集成指令模板、进度条、loading效果等功能。
 

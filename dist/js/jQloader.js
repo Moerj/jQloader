@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * jQloader  v0.2.0
+ * jQloader  v0.2.1
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -40,7 +40,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     // 对一个 dom 建立jQloader的存储机制
     var JQloader = function JQloader(dom) {
         if (dom._jQloader === undefined) {
-            dom._jQloader = new Map();
+            dom._jQloader = {};
         }
         return {
             get: function get(key) {
