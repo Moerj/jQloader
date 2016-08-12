@@ -176,10 +176,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
             // 没有 url 参数，代表当前回到无路由页面
             // 强制刷新一次，释放内存，也让它真正回到首页
-            if (window._jQloader_isReady) {
+            if (_jQloader_isReady) {
                 window.location.replace(window.location.href);
-            } else {
-                window._jQloader_isReady = true;
             }
         };
 
@@ -191,6 +189,7 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         var $html = $('html');
         var $body = $('body');
         var $router = void 0;
+        var _jQloader_isReady = false; //当前组件初始化状态
 
         var OPTS_DEFAULT = {
             history: true,
@@ -372,7 +371,9 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         }();
 
         window.addEventListener("popstate", function () {
-            _loadHitory();
+            if (_jQloader_isReady) {
+                _loadHitory();
+            }
         });
 
         // 暴露的公共方法 ==============================
@@ -555,6 +556,9 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
 
             // 请求一次浏览器历史
             _loadHitory();
+
+            // 组件加载完成
+            _jQloader_isReady = true;
         });
     })();
 }
