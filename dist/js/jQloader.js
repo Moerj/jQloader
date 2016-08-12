@@ -184,7 +184,8 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
             }
         };
 
-        // 地址栏改变
+        // popstate 地址栏改变事件，浏览器前进、后退、手动修改地址栏
+        // 注意 history.pushState 不会触发该事件
 
 
         var $window = $(window);
@@ -424,13 +425,17 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                                 url = OPTS.url.substring(2);
                             }
 
+                            // 浏览器地址栏操作
+                            // 路由 url 以#号开头，拼接在当前 url 后面
                             if ($container[0].localName === 'jq-router') {
-                                // 浏览器地址栏操作
+                                // 一级路由 url
                                 history.pushState({
                                     title: OPTS.title,
                                     url: OPTS.url
                                 }, '', '#' + url);
                             } else {
+                                // 二级路由 url
+                                // 加载容器非路由，需记录 id   请求的 url 拼接在当前路由地址后面
                                 var hashList = window.location.hash.split("#");
                                 var routerUrl = hashList[1];
                                 history.pushState({

@@ -323,12 +323,13 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
         // 强制刷新一次，释放内存，也让它真正回到首页
         if (JQloader(window).get('_jQloader_reload')) {
             window.location.replace(window.location.href);
-        }else{
-            JQloader(window).set('_jQloader_reload',true)
+        } else {
+            JQloader(window).set('_jQloader_reload', true)
         }
     }
 
-    // 地址栏改变
+    // popstate 地址栏改变事件，浏览器前进、后退、手动修改地址栏
+    // 注意 history.pushState 不会触发该事件
     window.addEventListener("popstate", () => {
         _loadHitory()
     });
@@ -373,13 +374,17 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
                             url = OPTS.url.substring(2)
                         }
 
+                        // 浏览器地址栏操作
+                        // 路由 url 以#号开头，拼接在当前 url 后面
                         if ($container[0].localName === 'jq-router') {
-                            // 浏览器地址栏操作
+                            // 一级路由 url
                             history.pushState({
                                 title: OPTS.title,
                                 url: OPTS.url
                             }, '', '#' + url);
                         } else {
+                            // 二级路由 url
+                            // 加载容器非路由，需记录 id   请求的 url 拼接在当前路由地址后面
                             let hashList = window.location.hash.split("#");
                             let routerUrl = hashList[1];
                             history.pushState({
