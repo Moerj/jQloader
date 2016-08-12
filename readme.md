@@ -119,6 +119,8 @@ $('div').loadPage({
     async: true,        //异步，默认 true
     title: 'string',    //浏览器tab页名称，默认 null
     strict: false       //严格模式加载 ajxa，默认 false
+},function(){
+    // callBack
 })
 ```
   
