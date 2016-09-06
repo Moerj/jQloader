@@ -1,5 +1,5 @@
 /**
- * jQloader  v0.2.3
+ * jQloader  v0.2.4
  * @license  MIT
  * Designed  and built by Moer
  * Homepage  https://moerj.github.io/jQloader
@@ -498,15 +498,14 @@ if (typeof jQuery === 'undefined' && typeof Zepto === 'undefined') {
     }
 
 
+    // 创建并暴露 进度条
+    $.progressBar = new ProgressBar();
 
+    // 创建并暴露 loading蒙层
+    $.loadingMask = new Loading();
 
     $(() => { // jQloader所在页面/首页初始化 dom 完毕
 
-        // 创建并暴露 进度条
-        $.progressBar = new ProgressBar();
-
-        // 创建并暴露 loading蒙层
-        $.loadingMask = new Loading();
 
         // 重写 a 标签事件
         _reWriteLinks();
