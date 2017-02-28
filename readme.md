@@ -17,6 +17,10 @@ https://moerj.github.io/jQloader
   
   
 ## Install
+```cmd
+npm i jqloader
+```
+
 引入依赖 jQuery 或者 Zepto
 ```html
 <script src="jquery.js"></script>

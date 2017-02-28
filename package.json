@@ -1,7 +1,7 @@
 {
-  "name": "jQloader",
-  "version": "1.0.0",
-  "description": "jquery静态加载器",
+  "name": "jqloader",
+  "version": "0.2.4",
+  "description": "jquery page loader,静态加载器",
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
     "browser-sync": "^2.10.1",
@@ -18,8 +18,11 @@
     "gulp-util": "^3.0.7"
   },
   "keywords": [
-    "jQloader"
+    "jQloader",
+    "pjax",
+    "ajax pushstate",
+    "page loader"
   ],
   "author": "Moer",
-  "license": "MIT"
+  "license": "ISC"
 }
